@@ -1,0 +1,4383 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>GyroLab | Gyroscopic Couple Analyzer</title>
+
+    <!-- Chart.js for analysis graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Your stylesheet -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <style>
+    /* =========================================================
+   GYROLAB - GYROSCOPIC COUPLE ANALYZER
+   COMPLETE STYLESHEET
+========================================================= */
+
+    /* =========================================================
+   GLOBAL
+========================================================= */
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+
+      background:
+        radial-gradient(
+          circle at 15% 10%,
+          rgba(30, 110, 255, 0.1),
+          transparent 28%
+        ),
+        radial-gradient(
+          circle at 85% 30%,
+          rgba(0, 170, 255, 0.07),
+          transparent 25%
+        ),
+        #07111f;
+
+      color: #eaf4ff;
+
+      line-height: 1.6;
+
+      overflow-x: hidden;
+    }
+
+    button,
+    input,
+    select {
+      font-family: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* =========================================================
+   SCROLLBAR
+========================================================= */
+
+    ::-webkit-scrollbar {
+      width: 9px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #07111f;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #1b6cff;
+      border-radius: 20px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3185ff;
+    }
+
+    /* =========================================================
+   NAVBAR
+========================================================= */
+
+    .navbar {
+      position: sticky;
+
+      top: 0;
+
+      z-index: 1000;
+
+      height: 72px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      padding: 0 5%;
+
+      background: rgba(5, 14, 27, 0.88);
+
+      backdrop-filter: blur(18px);
+
+      border-bottom: 1px solid rgba(90, 160, 255, 0.12);
+    }
+
+    .logo {
+      font-size: 25px;
+
+      font-weight: 800;
+
+      letter-spacing: -1px;
+    }
+
+    .logo span,
+    .footer-logo span {
+      color: #3f91ff;
+    }
+
+    .navbar nav {
+      display: flex;
+
+      gap: 32px;
+
+      align-items: center;
+    }
+
+    .navbar nav a {
+      color: #9bb0c7;
+
+      font-size: 13px;
+
+      font-weight: 600;
+
+      transition: color 0.25s ease;
+    }
+
+    .navbar nav a:hover {
+      color: #4e9aff;
+    }
+
+    .project-tag {
+      font-size: 10px;
+
+      letter-spacing: 1.2px;
+
+      padding: 7px 11px;
+
+      border: 1px solid rgba(70, 150, 255, 0.3);
+
+      border-radius: 20px;
+
+      color: #73adff;
+
+      background: rgba(40, 120, 255, 0.07);
+    }
+
+    /* =========================================================
+   HERO
+========================================================= */
+
+    .hero {
+      min-height: 610px;
+
+      display: grid;
+
+      grid-template-columns:
+        1.1fr
+        0.9fr;
+
+      align-items: center;
+
+      gap: 30px;
+
+      padding: 80px 8% 70px;
+
+      position: relative;
+
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+
+      position: absolute;
+
+      width: 500px;
+
+      height: 500px;
+
+      border-radius: 50%;
+
+      background: rgba(25, 105, 255, 0.08);
+
+      filter: blur(80px);
+
+      top: 0;
+
+      right: 5%;
+    }
+
+    .hero-content {
+      position: relative;
+
+      z-index: 2;
+    }
+
+    .badge {
+      display: inline-block;
+
+      padding: 7px 13px;
+
+      border-radius: 20px;
+
+      border: 1px solid rgba(65, 150, 255, 0.35);
+
+      color: #6eaeff;
+
+      background: rgba(50, 130, 255, 0.07);
+
+      font-size: 10px;
+
+      font-weight: 700;
+
+      letter-spacing: 1.4px;
+
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(48px, 6vw, 78px);
+
+      line-height: 0.98;
+
+      letter-spacing: -4px;
+
+      max-width: 750px;
+
+      margin-bottom: 25px;
+    }
+
+    .hero h1 span {
+      color: #4395ff;
+    }
+
+    .hero p {
+      max-width: 630px;
+
+      color: #91a7be;
+
+      font-size: 17px;
+
+      line-height: 1.8;
+
+      margin-bottom: 32px;
+    }
+
+    .hero-buttons {
+      display: flex;
+
+      gap: 14px;
+
+      flex-wrap: wrap;
+    }
+
+    .primary-button,
+    .secondary-button {
+      border: none;
+
+      padding: 13px 21px;
+
+      border-radius: 9px;
+
+      font-weight: 700;
+
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+
+    .primary-button {
+      background: linear-gradient(135deg, #2477ff, #42a1ff);
+
+      color: white;
+
+      box-shadow: 0 10px 30px rgba(25, 115, 255, 0.22);
+    }
+
+    .primary-button:hover {
+      transform: translateY(-2px);
+
+      box-shadow: 0 15px 35px rgba(25, 115, 255, 0.32);
+    }
+
+    .secondary-button {
+      background: rgba(255, 255, 255, 0.03);
+
+      color: #b9cee5;
+
+      border: 1px solid rgba(120, 170, 220, 0.16);
+    }
+
+    .secondary-button:hover {
+      transform: translateY(-2px);
+
+      border-color: rgba(80, 150, 255, 0.45);
+
+      color: white;
+    }
+
+    /* =========================================================
+   HERO WHEEL
+========================================================= */
+
+    .hero-wheel-container {
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      flex-direction: column;
+
+      position: relative;
+    }
+
+    .hero-wheel {
+      width: 340px;
+
+      height: 340px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      border-radius: 50%;
+
+      background: radial-gradient(
+        circle,
+        rgba(50, 130, 255, 0.1),
+        transparent 65%
+      );
+
+      box-shadow: 0 0 80px rgba(30, 120, 255, 0.08);
+    }
+
+    .hero-wheel-ring {
+      width: 250px;
+
+      height: 250px;
+
+      border-radius: 50%;
+
+      border: 9px solid rgba(65, 155, 255, 0.9);
+
+      position: relative;
+
+      animation: heroSpin 9s linear infinite;
+
+      box-shadow:
+        0 0 30px rgba(50, 140, 255, 0.25),
+        inset 0 0 30px rgba(50, 140, 255, 0.1);
+    }
+
+    .hero-wheel-ring::before {
+      content: "";
+
+      position: absolute;
+
+      inset: 22px;
+
+      border-radius: 50%;
+
+      border: 2px solid rgba(90, 180, 255, 0.35);
+    }
+
+    .hero-hub {
+      position: absolute;
+
+      width: 42px;
+
+      height: 42px;
+
+      border-radius: 50%;
+
+      top: 50%;
+
+      left: 50%;
+
+      transform: translate(-50%, -50%);
+
+      background: radial-gradient(
+        circle at 35% 30%,
+        #8ecaff,
+        #1e6fff 60%,
+        #0b3e92
+      );
+
+      box-shadow: 0 0 25px rgba(50, 150, 255, 0.45);
+    }
+
+    .hero-spoke {
+      position: absolute;
+
+      width: 2px;
+
+      height: 105px;
+
+      background: linear-gradient(
+        to bottom,
+        transparent,
+        rgba(90, 180, 255, 0.65),
+        transparent
+      );
+
+      top: 21px;
+
+      left: 50%;
+
+      transform-origin: 50% 104px;
+    }
+
+    .spoke-1 {
+      transform: translateX(-50%) rotate(0deg);
+    }
+
+    .spoke-2 {
+      transform: translateX(-50%) rotate(60deg);
+    }
+
+    .spoke-3 {
+      transform: translateX(-50%) rotate(120deg);
+    }
+
+    .spoke-4 {
+      transform: translateX(-50%) rotate(180deg);
+    }
+
+    .spoke-5 {
+      transform: translateX(-50%) rotate(240deg);
+    }
+
+    .spoke-6 {
+      transform: translateX(-50%) rotate(300deg);
+    }
+
+    .hero-wheel-label {
+      margin-top: 15px;
+
+      font-size: 10px;
+
+      letter-spacing: 2px;
+
+      color: #62809d;
+    }
+
+    @keyframes heroSpin {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* =========================================================
+   QUICK STATS
+========================================================= */
+
+    .quick-stats {
+      width: 84%;
+
+      margin: 0 auto 80px;
+
+      display: grid;
+
+      grid-template-columns: repeat(4, 1fr);
+
+      border: 1px solid rgba(100, 160, 220, 0.12);
+
+      border-radius: 14px;
+
+      overflow: hidden;
+
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .quick-stat {
+      padding: 22px;
+
+      display: flex;
+
+      flex-direction: column;
+
+      gap: 5px;
+
+      border-right: 1px solid rgba(100, 160, 220, 0.1);
+    }
+
+    .quick-stat:last-child {
+      border-right: none;
+    }
+
+    .quick-stat strong {
+      color: #74b3ff;
+
+      font-size: 19px;
+    }
+
+    .quick-stat span {
+      color: #71879e;
+
+      font-size: 11px;
+    }
+
+    /* =========================================================
+   SECTIONS
+========================================================= */
+
+    .section {
+      width: 84%;
+
+      margin: 0 auto;
+
+      padding: 90px 0;
+    }
+
+    .section-heading {
+      max-width: 750px;
+
+      margin-bottom: 42px;
+    }
+
+    .small-title {
+      display: block;
+
+      color: #448fff;
+
+      font-size: 10px;
+
+      font-weight: 800;
+
+      letter-spacing: 1.8px;
+
+      margin-bottom: 10px;
+    }
+
+    .section-heading h2 {
+      font-size: 39px;
+
+      letter-spacing: -1.5px;
+
+      margin-bottom: 12px;
+    }
+
+    .section-heading p {
+      color: #8299b1;
+
+      font-size: 14px;
+
+      max-width: 680px;
+    }
+
+    /* =========================================================
+   CARD
+========================================================= */
+
+    .card {
+      border: 1px solid rgba(100, 160, 220, 0.12);
+
+      background: linear-gradient(
+        145deg,
+        rgba(20, 39, 63, 0.72),
+        rgba(7, 20, 36, 0.82)
+      );
+
+      border-radius: 16px;
+
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.16);
+    }
+
+    .card-title {
+      font-size: 16px;
+
+      font-weight: 700;
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 10px;
+    }
+
+    .card-icon {
+      width: 31px;
+
+      height: 31px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      border-radius: 8px;
+
+      background: rgba(45, 130, 255, 0.12);
+
+      color: #5da5ff;
+    }
+
+    /* =========================================================
+   ANALYZER
+========================================================= */
+
+    .analyzer-layout {
+      display: grid;
+
+      grid-template-columns:
+        1fr
+        1fr;
+
+      gap: 22px;
+    }
+
+    .input-card {
+      padding: 27px;
+    }
+
+    .result-card {
+      padding: 27px;
+
+      min-height: 100%;
+    }
+
+    /* =========================================================
+   MODE BUTTONS
+========================================================= */
+
+    .input-mode {
+      display: grid;
+
+      grid-template-columns:
+        1fr
+        1fr;
+
+      gap: 7px;
+
+      margin: 25px 0;
+    }
+
+    .mode-btn {
+      border: 1px solid rgba(100, 160, 220, 0.15);
+
+      background: rgba(255, 255, 255, 0.025);
+
+      color: #8198b0;
+
+      padding: 9px;
+
+      border-radius: 7px;
+
+      font-size: 11px;
+
+      font-weight: 700;
+    }
+
+    .mode-btn.active {
+      color: white;
+
+      border-color: rgba(60, 145, 255, 0.55);
+
+      background: rgba(40, 125, 255, 0.13);
+    }
+
+    /* =========================================================
+   INPUT GROUP
+========================================================= */
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-group label,
+    .slider-header label {
+      color: #9bb0c7;
+
+      font-size: 12px;
+
+      font-weight: 600;
+    }
+
+    .input-group select {
+      width: 100%;
+
+      margin-top: 8px;
+
+      padding: 11px 12px;
+
+      border-radius: 8px;
+
+      border: 1px solid rgba(100, 160, 220, 0.15);
+
+      background: #0c1b2d;
+
+      color: #dbeaff;
+
+      outline: none;
+    }
+
+    .input-group select:focus {
+      border-color: #3289ff;
+    }
+
+    /* =========================================================
+   SLIDERS
+========================================================= */
+
+    .slider-input-group {
+      margin: 22px 0;
+    }
+
+    .slider-header {
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      margin-bottom: 10px;
+    }
+
+    .slider-header span {
+      font-size: 10px;
+
+      color: #57728f;
+
+      text-transform: uppercase;
+    }
+
+    .slider-row {
+      display: grid;
+
+      grid-template-columns:
+        1fr
+        82px;
+
+      gap: 12px;
+
+      align-items: center;
+    }
+
+    .slider-row input[type="number"] {
+      width: 100%;
+
+      padding: 8px;
+
+      border-radius: 7px;
+
+      border: 1px solid rgba(100, 160, 220, 0.14);
+
+      background: rgba(255, 255, 255, 0.035);
+
+      color: white;
+
+      outline: none;
+
+      font-size: 12px;
+    }
+
+    .slider-row input[type="number"]:focus {
+      border-color: #378fff;
+    }
+
+    /* RANGE */
+
+    input[type="range"] {
+      width: 100%;
+
+      height: 5px;
+
+      appearance: none;
+
+      background: #1b3047;
+
+      border-radius: 20px;
+
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+
+      width: 16px;
+
+      height: 16px;
+
+      border-radius: 50%;
+
+      background: #3c91ff;
+
+      border: 3px solid #0b1a2b;
+
+      box-shadow: 0 0 0 2px rgba(60, 145, 255, 0.25);
+
+      cursor: pointer;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 16px;
+
+      height: 16px;
+
+      border-radius: 50%;
+
+      background: #3c91ff;
+
+      border: 3px solid #0b1a2b;
+
+      cursor: pointer;
+    }
+
+    /* =========================================================
+   RESET BUTTON
+========================================================= */
+
+    .reset-button {
+      width: 100%;
+
+      margin-top: 10px;
+
+      padding: 11px;
+
+      border-radius: 8px;
+
+      border: 1px solid rgba(100, 160, 220, 0.13);
+
+      background: rgba(255, 255, 255, 0.025);
+
+      color: #8ba1b8;
+
+      font-weight: 700;
+
+      font-size: 11px;
+
+      transition: 0.2s;
+    }
+
+    .reset-button:hover {
+      border-color: rgba(60, 145, 255, 0.4);
+
+      color: white;
+
+      background: rgba(50, 130, 255, 0.08);
+    }
+
+    /* =========================================================
+   RESULT CARD
+========================================================= */
+
+    .result-top {
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: flex-start;
+    }
+
+    .live-label {
+      color: #526d88;
+
+      font-size: 9px;
+
+      letter-spacing: 1px;
+
+      margin-top: 4px;
+    }
+
+    .live-indicator {
+      display: flex;
+
+      align-items: center;
+
+      gap: 6px;
+
+      color: #53d6a1;
+
+      font-size: 9px;
+
+      font-weight: 800;
+
+      letter-spacing: 1px;
+    }
+
+    .live-indicator span {
+      width: 7px;
+
+      height: 7px;
+
+      border-radius: 50%;
+
+      background: #42d69c;
+
+      box-shadow: 0 0 10px rgba(60, 220, 160, 0.8);
+
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.35;
+      }
+    }
+
+    /* =========================================================
+   MAIN RESULT
+========================================================= */
+
+    .main-result {
+      text-align: center;
+
+      padding: 35px 10px;
+
+      margin: 20px 0;
+
+      border-radius: 13px;
+
+      background: radial-gradient(
+        circle,
+        rgba(40, 125, 255, 0.11),
+        rgba(255, 255, 255, 0.015)
+      );
+
+      border: 1px solid rgba(80, 150, 255, 0.1);
+    }
+
+    .main-result span {
+      display: block;
+
+      font-size: 9px;
+
+      color: #718aa4;
+
+      letter-spacing: 1.7px;
+
+      font-weight: 700;
+    }
+
+    .main-result strong {
+      display: inline-block;
+
+      font-size: 55px;
+
+      color: #61a6ff;
+
+      line-height: 1.2;
+
+      margin-top: 5px;
+
+      letter-spacing: -2px;
+    }
+
+    .main-result small {
+      font-size: 14px;
+
+      color: #7691ac;
+
+      margin-left: 4px;
+    }
+
+    /* =========================================================
+   RESULT GRID
+========================================================= */
+
+    .result-grid {
+      display: grid;
+
+      grid-template-columns:
+        1fr
+        1fr;
+
+      gap: 10px;
+    }
+
+    .result-item {
+      padding: 15px;
+
+      border-radius: 9px;
+
+      background: rgba(255, 255, 255, 0.025);
+
+      border: 1px solid rgba(100, 160, 220, 0.08);
+    }
+
+    .result-item span {
+      display: block;
+
+      color: #68819c;
+
+      font-size: 9px;
+
+      margin-bottom: 5px;
+    }
+
+    .result-item strong {
+      color: #c8ddf2;
+
+      font-size: 18px;
+    }
+
+    .result-item small {
+      color: #526e8b;
+
+      font-size: 9px;
+
+      margin-left: 3px;
+    }
+
+    .result-equation {
+      margin-top: 12px;
+
+      padding: 15px;
+
+      border-radius: 9px;
+
+      background: rgba(40, 125, 255, 0.06);
+
+      border: 1px solid rgba(50, 140, 255, 0.13);
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+    }
+
+    .result-equation span {
+      font-size: 9px;
+
+      color: #66829e;
+
+      letter-spacing: 1px;
+    }
+
+    .result-equation strong {
+      color: #61a6ff;
+
+      font-size: 17px;
+    }
+
+    /* =========================================================
+   DARK SIMULATION SECTION
+========================================================= */
+
+    .dark-section {
+      width: 100%;
+
+      padding-left: 8%;
+
+      padding-right: 8%;
+
+      background: rgba(2, 10, 20, 0.55);
+
+      border-top: 1px solid rgba(100, 160, 220, 0.06);
+
+      border-bottom: 1px solid rgba(100, 160, 220, 0.06);
+    }
+
+    .simulation-layout {
+      display: grid;
+
+      grid-template-columns:
+        1.5fr
+        0.5fr;
+
+      gap: 20px;
+    }
+
+    .simulation-card {
+      min-height: 520px;
+
+      position: relative;
+
+      border-radius: 15px;
+
+      overflow: hidden;
+
+      border: 1px solid rgba(80, 150, 255, 0.12);
+
+      background: radial-gradient(
+        circle at center,
+        rgba(30, 110, 255, 0.09),
+        rgba(3, 12, 23, 0.95)
+      );
+    }
+
+    #wheelCanvas {
+      display: block;
+
+      width: 100%;
+
+      height: 500px;
+    }
+
+    .simulation-overlay {
+      position: absolute;
+
+      left: 20px;
+
+      right: 20px;
+
+      bottom: 20px;
+
+      display: grid;
+
+      grid-template-columns: repeat(3, 1fr);
+
+      gap: 8px;
+    }
+
+    .simulation-value {
+      padding: 11px;
+
+      border-radius: 8px;
+
+      background: rgba(4, 15, 29, 0.8);
+
+      border: 1px solid rgba(80, 150, 255, 0.12);
+
+      backdrop-filter: blur(10px);
+    }
+
+    .simulation-value span {
+      display: block;
+
+      font-size: 8px;
+
+      color: #627e9b;
+
+      letter-spacing: 1px;
+    }
+
+    .simulation-value strong {
+      display: block;
+
+      margin-top: 2px;
+
+      color: #65aaff;
+
+      font-size: 13px;
+    }
+
+    /* =========================================================
+   MOTION PANEL
+========================================================= */
+
+    .motion-panel {
+      display: flex;
+
+      flex-direction: column;
+
+      gap: 10px;
+    }
+
+    .motion-item {
+      display: flex;
+
+      gap: 13px;
+
+      padding: 18px;
+
+      border-radius: 12px;
+
+      background: rgba(255, 255, 255, 0.025);
+
+      border: 1px solid rgba(100, 160, 220, 0.08);
+    }
+
+    .motion-icon {
+      min-width: 38px;
+
+      height: 38px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      border-radius: 9px;
+
+      color: #63a8ff;
+
+      background: rgba(45, 130, 255, 0.1);
+
+      font-size: 18px;
+
+      font-weight: 800;
+    }
+
+    .motion-item strong {
+      font-size: 12px;
+
+      color: #c8ddf2;
+    }
+
+    .motion-item p {
+      color: #627b96;
+
+      font-size: 10px;
+
+      margin-top: 3px;
+
+      line-height: 1.5;
+    }
+
+    .axis-legend {
+      margin-top: auto;
+
+      padding: 16px;
+
+      display: flex;
+
+      flex-direction: column;
+
+      gap: 9px;
+
+      color: #718aa4;
+
+      font-size: 10px;
+    }
+
+    .axis-legend div {
+      display: flex;
+
+      align-items: center;
+
+      gap: 8px;
+    }
+
+    .legend-dot {
+      width: 8px;
+
+      height: 8px;
+
+      border-radius: 50%;
+    }
+
+    .spin-dot {
+      background: #3c91ff;
+    }
+
+    .precession-dot {
+      background: #75caff;
+    }
+
+    /* =========================================================
+   CALCULATION TABS
+========================================================= */
+
+    .calculation-tabs {
+      display: flex;
+
+      gap: 6px;
+
+      padding: 5px;
+
+      width: fit-content;
+
+      margin-bottom: 25px;
+
+      border-radius: 9px;
+
+      background: rgba(255, 255, 255, 0.025);
+
+      border: 1px solid rgba(100, 160, 220, 0.09);
+    }
+
+    .calc-tab {
+      border: none;
+
+      background: transparent;
+
+      color: #7189a2;
+
+      padding: 9px 16px;
+
+      border-radius: 6px;
+
+      font-size: 11px;
+
+      font-weight: 700;
+    }
+
+    .calc-tab.active {
+      background: rgba(50, 135, 255, 0.14);
+
+      color: #68aaff;
+    }
+
+    .calc-tab-content {
+      display: none;
+    }
+
+    .calc-tab-content.active {
+      display: block;
+
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+
+        transform: translateY(5px);
+      }
+
+      to {
+        opacity: 1;
+
+        transform: translateY(0);
+      }
+    }
+
+    /* =========================================================
+   FORMULA GRID
+========================================================= */
+
+    .formula-grid {
+      display: grid;
+
+      grid-template-columns: repeat(3, 1fr);
+
+      gap: 14px;
+    }
+
+    .formula-card {
+      padding: 22px;
+
+      min-height: 190px;
+
+      border-radius: 12px;
+
+      border: 1px solid rgba(100, 160, 220, 0.1);
+
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .formula-card > span {
+      color: #477fae;
+
+      font-size: 8px;
+
+      letter-spacing: 1.2px;
+
+      font-weight: 800;
+    }
+
+    .formula-card h3 {
+      font-size: 14px;
+
+      margin: 8px 0 16px;
+    }
+
+    .formula {
+      display: inline-block;
+
+      padding: 9px 13px;
+
+      border-radius: 7px;
+
+      color: #67aaff;
+
+      background: rgba(40, 125, 255, 0.08);
+
+      font-size: 18px;
+
+      font-weight: 700;
+
+      margin-bottom: 12px;
+    }
+
+    .formula-card p {
+      color: #7089a2;
+
+      font-size: 10px;
+
+      line-height: 1.6;
+    }
+
+    .highlight-formula {
+      border-color: rgba(50, 140, 255, 0.25);
+
+      background: linear-gradient(
+        145deg,
+        rgba(40, 125, 255, 0.08),
+        rgba(255, 255, 255, 0.02)
+      );
+    }
+
+    /* =========================================================
+   STEP CALCULATION
+========================================================= */
+
+    .calculation-breakdown {
+      display: grid;
+
+      gap: 10px;
+
+      max-width: 850px;
+    }
+
+    .calculation-step {
+      display: grid;
+
+      grid-template-columns:
+        55px
+        1fr;
+
+      gap: 15px;
+
+      padding: 20px;
+
+      border-radius: 11px;
+
+      background: rgba(255, 255, 255, 0.025);
+
+      border: 1px solid rgba(100, 160, 220, 0.08);
+    }
+
+    .step-number {
+      width: 42px;
+
+      height: 42px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      border-radius: 10px;
+
+      background: rgba(45, 130, 255, 0.11);
+
+      color: #61a5ff;
+
+      font-size: 11px;
+
+      font-weight: 800;
+    }
+
+    .step-content h4 {
+      font-size: 13px;
+
+      margin-bottom: 5px;
+    }
+
+    .step-formula {
+      color: #64aaff;
+
+      font-size: 15px;
+
+      font-weight: 700;
+
+      margin-bottom: 5px;
+    }
+
+    .step-content p {
+      color: #738ba4;
+
+      font-size: 11px;
+    }
+
+    .final-step {
+      border-color: rgba(50, 140, 255, 0.24);
+    }
+
+    /* =========================================================
+   ASSUMPTIONS
+========================================================= */
+
+    .assumptions-grid {
+      display: grid;
+
+      grid-template-columns: repeat(3, 1fr);
+
+      gap: 14px;
+    }
+
+    .assumption-card {
+      padding: 21px;
+
+      border-radius: 11px;
+
+      background: rgba(255, 255, 255, 0.025);
+
+      border: 1px solid rgba(100, 160, 220, 0.08);
+    }
+
+    .assumption-card strong {
+      color: #438fff;
+
+      font-size: 11px;
+    }
+
+    .assumption-card h3 {
+      font-size: 14px;
+
+      margin: 8px 0;
+    }
+
+    .assumption-card p {
+      color: #6f879f;
+
+      font-size: 10px;
+
+      line-height: 1.6;
+    }
+
+    /* =========================================================
+   ANALYSIS
+========================================================= */
+
+    .analysis-buttons {
+      display: flex;
+
+      gap: 8px;
+
+      flex-wrap: wrap;
+
+      margin-bottom: 18px;
+    }
+
+    .analysis-btn {
+      padding: 9px 16px;
+
+      border-radius: 7px;
+
+      border: 1px solid rgba(100, 160, 220, 0.12);
+
+      background: rgba(255, 255, 255, 0.025);
+
+      color: #7089a2;
+
+      font-size: 10px;
+
+      font-weight: 700;
+    }
+
+    .analysis-btn.active {
+      color: #6aaaff;
+
+      border-color: rgba(50, 140, 255, 0.35);
+
+      background: rgba(40, 125, 255, 0.1);
+    }
+
+    .chart-card {
+      height: 430px;
+
+      padding: 25px;
+
+      border-radius: 14px;
+
+      background: rgba(255, 255, 255, 0.025);
+
+      border: 1px solid rgba(100, 160, 220, 0.09);
+    }
+
+    #analysisChart {
+      width: 100% !important;
+
+      height: 100% !important;
+    }
+
+    /* =========================================================
+   SENSITIVITY
+========================================================= */
+
+    .sensitivity-section {
+      padding-top: 30px;
+    }
+
+    .sensitivity-grid {
+      display: grid;
+
+      grid-template-columns: repeat(2, 1fr);
+
+      gap: 13px;
+    }
+
+    .sensitivity-card {
+      padding: 18px;
+
+      border-radius: 11px;
+
+      background: rgba(255, 255, 255, 0.025);
+
+      border: 1px solid rgba(100, 160, 220, 0.08);
+    }
+
+    .sensitivity-top {
+      display: flex;
+
+      justify-content: space-between;
+
+      margin-bottom: 10px;
+    }
+
+    .sensitivity-top strong {
+      font-size: 12px;
+    }
+
+    .sensitivity-top span {
+      font-size: 10px;
+
+      color: #5d9eff;
+    }
+
+    .sensitivity-bar {
+      height: 6px;
+
+      background: #172a40;
+
+      border-radius: 20px;
+
+      overflow: hidden;
+    }
+
+    .sensitivity-fill {
+      height: 100%;
+
+      border-radius: inherit;
+
+      background: linear-gradient(90deg, #1e6fff, #62b1ff);
+    }
+
+    /* =========================================================
+   VALIDATION
+========================================================= */
+
+    .validation-section {
+      padding-top: 50px;
+    }
+
+    .validation-grid {
+      display: grid;
+
+      grid-template-columns: repeat(3, 1fr);
+
+      gap: 14px;
+    }
+
+    .validation-card {
+      padding: 23px;
+
+      border-radius: 12px;
+
+      background: rgba(255, 255, 255, 0.025);
+
+      border: 1px solid rgba(100, 160, 220, 0.09);
+    }
+
+    .validation-card-title {
+      color: #64809d;
+
+      font-size: 9px;
+
+      letter-spacing: 1.2px;
+
+      font-weight: 800;
+
+      margin-bottom: 20px;
+    }
+
+    .validation-result {
+      display: flex;
+
+      align-items: baseline;
+
+      gap: 6px;
+
+      flex-wrap: wrap;
+    }
+
+    .validation-result span {
+      width: 100%;
+
+      color: #8ca2b9;
+
+      font-size: 11px;
+    }
+
+    .validation-result strong {
+      color: #63a8ff;
+
+      font-size: 38px;
+    }
+
+    .validation-result small {
+      color: #68839e;
+
+      font-size: 10px;
+    }
+
+    .validation-label {
+      display: block;
+
+      color: #839bb3;
+
+      font-size: 11px;
+
+      margin-bottom: 8px;
+    }
+
+    .validation-input {
+      display: flex;
+
+      align-items: center;
+
+      gap: 8px;
+    }
+
+    .validation-input input {
+      width: 100%;
+
+      padding: 11px;
+
+      border-radius: 8px;
+
+      border: 1px solid rgba(100, 160, 220, 0.14);
+
+      background: rgba(0, 0, 0, 0.15);
+
+      color: white;
+
+      outline: none;
+    }
+
+    .validation-input input:focus {
+      border-color: #378fff;
+    }
+
+    .validation-input span {
+      color: #637e99;
+
+      font-size: 10px;
+    }
+
+    .validation-note {
+      color: #526c87;
+
+      font-size: 9px;
+
+      margin-top: 10px;
+    }
+
+    .error-result span {
+      display: block;
+
+      color: #8ca2b9;
+
+      font-size: 11px;
+    }
+
+    .error-result strong {
+      color: #69aaff;
+
+      font-size: 34px;
+    }
+
+    .error-result small {
+      color: #6c87a0;
+
+      font-size: 11px;
+
+      margin-left: 3px;
+    }
+
+    .validation-status {
+      display: inline-block;
+
+      margin-top: 15px;
+
+      padding: 6px 9px;
+
+      border-radius: 6px;
+
+      background: rgba(255, 255, 255, 0.035);
+
+      color: #738ba2;
+
+      font-size: 9px;
+
+      font-weight: 700;
+    }
+
+    .validation-status.success {
+      color: #56d8a0;
+
+      background: rgba(50, 210, 145, 0.08);
+    }
+
+    .validation-status.warning {
+      color: #ffc766;
+
+      background: rgba(255, 190, 60, 0.08);
+    }
+
+    .validation-status.danger {
+      color: #ff7e86;
+
+      background: rgba(255, 70, 80, 0.08);
+    }
+
+    /* =========================================================
+   SYMBOLS
+========================================================= */
+
+    .symbols-section {
+      padding-top: 40px;
+    }
+
+    .symbols-card {
+      display: grid;
+
+      grid-template-columns: repeat(3, 1fr);
+
+      gap: 1px;
+
+      border-radius: 12px;
+
+      overflow: hidden;
+
+      border: 1px solid rgba(100, 160, 220, 0.08);
+
+      background: rgba(100, 160, 220, 0.08);
+    }
+
+    .symbol-row {
+      padding: 17px;
+
+      background: #0a1829;
+
+      display: grid;
+
+      grid-template-columns:
+        40px
+        1fr
+        50px;
+
+      align-items: center;
+
+      gap: 8px;
+    }
+
+    .symbol-row span {
+      color: #65aaff;
+
+      font-size: 19px;
+
+      font-weight: 700;
+    }
+
+    .symbol-row p {
+      color: #8ca2b8;
+
+      font-size: 10px;
+    }
+
+    .symbol-row small {
+      color: #55708b;
+
+      font-size: 9px;
+
+      text-align: right;
+    }
+
+    /* =========================================================
+   PROJECT INFO
+========================================================= */
+
+    .project-info {
+      margin-top: 40px;
+
+      padding: 80px 8%;
+
+      background: linear-gradient(
+        135deg,
+        rgba(20, 90, 190, 0.1),
+        rgba(4, 17, 31, 0.4)
+      );
+
+      border-top: 1px solid rgba(80, 150, 255, 0.09);
+    }
+
+    .project-info-content {
+      max-width: 850px;
+    }
+
+    .project-info h2 {
+      font-size: 35px;
+
+      letter-spacing: -1px;
+
+      margin-bottom: 12px;
+    }
+
+    .project-info p {
+      color: #7891aa;
+
+      max-width: 650px;
+
+      font-size: 13px;
+    }
+
+    .project-points {
+      display: flex;
+
+      gap: 9px;
+
+      flex-wrap: wrap;
+
+      margin-top: 25px;
+    }
+
+    .project-points span {
+      padding: 8px 11px;
+
+      border-radius: 7px;
+
+      color: #7e9ab5;
+
+      background: rgba(255, 255, 255, 0.025);
+
+      border: 1px solid rgba(100, 160, 220, 0.09);
+
+      font-size: 9px;
+    }
+
+    /* =========================================================
+   FOOTER
+========================================================= */
+
+    footer {
+      padding: 35px 8%;
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 20px;
+
+      flex-wrap: wrap;
+
+      border-top: 1px solid rgba(100, 160, 220, 0.07);
+
+      color: #4e6881;
+    }
+
+    .footer-logo {
+      font-size: 18px;
+
+      font-weight: 800;
+
+      color: #c2d7eb;
+    }
+
+    footer p {
+      font-size: 10px;
+    }
+
+    footer small {
+      margin-left: auto;
+
+      font-size: 9px;
+    }
+
+    /* =========================================================
+   SELECTION
+========================================================= */
+
+    ::selection {
+      background: rgba(50, 140, 255, 0.3);
+
+      color: white;
+    }
+
+    /* =========================================================
+   RESPONSIVE - TABLET
+========================================================= */
+
+    @media (max-width: 1050px) {
+      .navbar {
+        padding: 0 4%;
+      }
+
+      .navbar nav {
+        gap: 15px;
+      }
+
+      .project-tag {
+        display: none;
+      }
+
+      .hero {
+        padding-left: 6%;
+
+        padding-right: 6%;
+      }
+
+      .section {
+        width: 90%;
+      }
+
+      .dark-section {
+        padding-left: 5%;
+
+        padding-right: 5%;
+      }
+
+      .analyzer-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .simulation-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .motion-panel {
+        display: grid;
+
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .axis-legend {
+        grid-column: 1 / -1;
+      }
+
+      .formula-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .assumptions-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .validation-grid {
+        grid-template-columns:
+          1fr
+          1fr;
+      }
+
+      .validation-result-card {
+        grid-column: 1 / -1;
+      }
+    }
+
+    /* =========================================================
+   RESPONSIVE - MOBILE
+========================================================= */
+
+    @media (max-width: 700px) {
+      .navbar {
+        height: 62px;
+      }
+
+      .navbar nav {
+        display: none;
+      }
+
+      .logo {
+        font-size: 21px;
+      }
+
+      .hero {
+        min-height: auto;
+
+        padding: 60px 6%;
+
+        grid-template-columns: 1fr;
+
+        text-align: center;
+      }
+
+      .hero-content {
+        display: flex;
+
+        align-items: center;
+
+        flex-direction: column;
+      }
+
+      .hero h1 {
+        font-size: 48px;
+
+        letter-spacing: -2.5px;
+      }
+
+      .hero p {
+        font-size: 14px;
+      }
+
+      .hero-wheel {
+        width: 280px;
+
+        height: 280px;
+      }
+
+      .hero-wheel-ring {
+        width: 205px;
+
+        height: 205px;
+      }
+
+      .quick-stats {
+        width: 90%;
+
+        grid-template-columns: 1fr 1fr;
+
+        margin-bottom: 30px;
+      }
+
+      .quick-stat {
+        border-bottom: 1px solid rgba(100, 160, 220, 0.08);
+      }
+
+      .section {
+        width: 90%;
+
+        padding: 65px 0;
+      }
+
+      .section-heading h2 {
+        font-size: 30px;
+      }
+
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .simulation-card {
+        min-height: 380px;
+      }
+
+      #wheelCanvas {
+        height: 380px;
+      }
+
+      .simulation-overlay {
+        grid-template-columns: 1fr;
+
+        position: relative;
+
+        left: auto;
+
+        right: auto;
+
+        bottom: auto;
+
+        padding: 10px;
+
+        margin-top: -140px;
+      }
+
+      .motion-panel {
+        display: flex;
+      }
+
+      .formula-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .assumptions-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .sensitivity-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .validation-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .validation-result-card {
+        grid-column: auto;
+      }
+
+      .symbols-card {
+        grid-template-columns: 1fr;
+      }
+
+      .project-info {
+        padding: 60px 6%;
+      }
+
+      .project-info h2 {
+        font-size: 28px;
+      }
+
+      footer {
+        padding: 30px 6%;
+
+        flex-direction: column;
+
+        align-items: flex-start;
+      }
+
+      footer small {
+        margin-left: 0;
+      }
+    }
+
+    /* =========================================================
+   EXTRA SMALL DEVICES
+========================================================= */
+
+    @media (max-width: 430px) {
+      .hero h1 {
+        font-size: 40px;
+      }
+
+      .main-result strong {
+        font-size: 45px;
+      }
+
+      .slider-row {
+        grid-template-columns:
+          1fr
+          70px;
+      }
+
+      .calculation-tabs {
+        width: 100%;
+
+        overflow-x: auto;
+      }
+
+      .calc-tab {
+        white-space: nowrap;
+      }
+
+      .analysis-buttons {
+        display: grid;
+
+        grid-template-columns:
+          1fr
+          1fr;
+      }
+
+      .chart-card {
+        height: 330px;
+
+        padding: 12px;
+      }
+    }
+  </style>
+
+  <body>
+    <!-- =========================================================
+     NAVIGATION
+========================================================= -->
+
+    <header class="navbar">
+      <div class="logo">Gyro<span>Lab</span></div>
+
+      <nav>
+        <a href="#analyzer"> Analyzer </a>
+
+        <a href="#visualization"> Visualization </a>
+
+        <a href="#calculation"> Calculation </a>
+
+        <a href="#analysis"> Analysis </a>
+
+        <a href="#validation"> Validation </a>
+      </nav>
+
+      <div class="project-tag">MECHANICAL ENGINEERING</div>
+    </header>
+
+    <!-- =========================================================
+     HERO SECTION
+========================================================= -->
+
+    <section class="hero">
+      <div class="hero-content">
+        <div class="badge">COMPUTATIONAL ENGINEERING MODEL</div>
+
+        <h1>
+          Gyroscopic
+          <span>Couple</span>
+          Analyzer
+        </h1>
+
+        <p>
+          Computational analysis of gyroscopic couple for a rotating wheel using
+          wheel speed, precession speed and mass properties.
+        </p>
+
+        <div class="hero-buttons">
+          <button class="primary-button" onclick="scrollToSection('analyzer')">
+            Start Analysis →
+          </button>
+
+          <button
+            class="secondary-button"
+            onclick="scrollToSection('visualization')"
+          >
+            View Simulation
+          </button>
+        </div>
+      </div>
+
+      <!-- Hero wheel -->
+
+      <div class="hero-wheel-container">
+        <div class="hero-wheel">
+          <div class="hero-wheel-ring">
+            <div class="hero-spoke spoke-1"></div>
+            <div class="hero-spoke spoke-2"></div>
+            <div class="hero-spoke spoke-3"></div>
+            <div class="hero-spoke spoke-4"></div>
+            <div class="hero-spoke spoke-5"></div>
+            <div class="hero-spoke spoke-6"></div>
+
+            <div class="hero-hub"></div>
+          </div>
+        </div>
+
+        <div class="hero-wheel-label">ROTATING GYROSCOPE</div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+     QUICK STATISTICS
+========================================================= -->
+
+    <section class="quick-stats">
+      <div class="quick-stat">
+        <strong> C = Iωωₚ </strong>
+
+        <span> Governing Equation </span>
+      </div>
+
+      <div class="quick-stat">
+        <strong> RPM → rad/s </strong>
+
+        <span> Angular Velocity Conversion </span>
+      </div>
+
+      <div class="quick-stat">
+        <strong> Live </strong>
+
+        <span> Computational Calculation </span>
+      </div>
+
+      <div class="quick-stat">
+        <strong> 2 Models </strong>
+
+        <span> Disc & Ring </span>
+      </div>
+    </section>
+
+    <!-- =========================================================
+     ANALYZER
+========================================================= -->
+
+    <section class="section" id="analyzer">
+      <div class="section-heading">
+        <span class="small-title"> INPUT & CALCULATION </span>
+
+        <h2>Gyroscopic Couple Analyzer</h2>
+
+        <p>
+          Configure the rotating wheel and observe the calculated gyroscopic
+          couple in real time.
+        </p>
+      </div>
+
+      <div class="analyzer-layout">
+        <!-- =================================================
+             INPUT PANEL
+        ================================================== -->
+
+        <div class="card input-card">
+          <div class="card-title">
+            <span class="card-icon"> ⚙ </span>
+
+            Input Parameters
+          </div>
+
+          <!-- MODE SWITCH -->
+
+          <div class="input-mode">
+            <button
+              id="standardModeBtn"
+              class="mode-btn active"
+              onclick="setInputMode('standard')"
+            >
+              Standard Values
+            </button>
+
+            <button
+              id="customModeBtn"
+              class="mode-btn"
+              onclick="setInputMode('custom')"
+            >
+              Custom Values
+            </button>
+          </div>
+
+          <!-- STANDARD PRESET -->
+
+          <div class="input-group" id="presetGroup">
+            <label> Standard Wheel </label>
+
+            <select id="preset" onchange="applyPreset()">
+              <option value="standard1">Standard Wheel — 5 kg</option>
+
+              <option value="standard2">Medium Wheel — 10 kg</option>
+
+              <option value="standard3">High-Speed Wheel — 8 kg</option>
+            </select>
+          </div>
+
+          <!-- =================================================
+                 WHEEL TYPE
+            ================================================== -->
+
+          <div class="input-group">
+            <label> Wheel Geometry </label>
+
+            <select id="wheelType" onchange="calculate()">
+              <option value="disc">Solid Disc</option>
+
+              <option value="ring">Thin Ring</option>
+            </select>
+          </div>
+
+          <!-- =================================================
+                 MASS
+            ================================================== -->
+
+          <div class="slider-input-group">
+            <div class="slider-header">
+              <label> Wheel Mass </label>
+
+              <span> kg </span>
+            </div>
+
+            <div class="slider-row">
+              <input
+                type="range"
+                id="massSlider"
+                min="1"
+                max="20"
+                step="0.1"
+                value="5"
+                oninput="syncSlider('mass')"
+              />
+
+              <input
+                type="number"
+                id="mass"
+                min="0.1"
+                max="100"
+                step="0.1"
+                value="5"
+                oninput="syncInput('mass')"
+              />
+            </div>
+          </div>
+
+          <!-- =================================================
+                 RADIUS
+            ================================================== -->
+
+          <div class="slider-input-group">
+            <div class="slider-header">
+              <label> Wheel Radius </label>
+
+              <span> m </span>
+            </div>
+
+            <div class="slider-row">
+              <input
+                type="range"
+                id="radiusSlider"
+                min="0.05"
+                max="0.50"
+                step="0.01"
+                value="0.20"
+                oninput="syncSlider('radius')"
+              />
+
+              <input
+                type="number"
+                id="radius"
+                min="0.01"
+                max="2"
+                step="0.01"
+                value="0.20"
+                oninput="syncInput('radius')"
+              />
+            </div>
+          </div>
+
+          <!-- =================================================
+                 WHEEL SPEED
+            ================================================== -->
+
+          <div class="slider-input-group">
+            <div class="slider-header">
+              <label> Wheel Speed </label>
+
+              <span> RPM </span>
+            </div>
+
+            <div class="slider-row">
+              <input
+                type="range"
+                id="wheelSpeedSlider"
+                min="100"
+                max="3000"
+                step="50"
+                value="1000"
+                oninput="syncSlider('wheelSpeed')"
+              />
+
+              <input
+                type="number"
+                id="wheelSpeed"
+                min="1"
+                max="10000"
+                step="50"
+                value="1000"
+                oninput="syncInput('wheelSpeed')"
+              />
+            </div>
+          </div>
+
+          <!-- =================================================
+                 PRECESSION SPEED
+            ================================================== -->
+
+          <div class="slider-input-group">
+            <div class="slider-header">
+              <label> Precession Speed </label>
+
+              <span> RPM </span>
+            </div>
+
+            <div class="slider-row">
+              <input
+                type="range"
+                id="precessionSpeedSlider"
+                min="5"
+                max="200"
+                step="5"
+                value="60"
+                oninput="syncSlider('precessionSpeed')"
+              />
+
+              <input
+                type="number"
+                id="precessionSpeed"
+                min="1"
+                max="1000"
+                step="5"
+                value="60"
+                oninput="syncInput('precessionSpeed')"
+              />
+            </div>
+          </div>
+
+          <!-- RESET -->
+
+          <button class="reset-button" onclick="resetInputs()">
+            ↻ Reset Parameters
+          </button>
+        </div>
+
+        <!-- =================================================
+             LIVE RESULT PANEL
+        ================================================== -->
+
+        <div class="card result-card">
+          <div class="result-top">
+            <div>
+              <div class="card-title">
+                <span class="card-icon"> 📊 </span>
+
+                Live Analysis
+              </div>
+
+              <p class="live-label">CALCULATION UPDATES AUTOMATICALLY</p>
+            </div>
+
+            <div class="live-indicator">
+              <span></span>
+
+              LIVE
+            </div>
+          </div>
+
+          <!-- MAIN RESULT -->
+
+          <div class="main-result">
+            <span> GYROSCOPIC COUPLE </span>
+
+            <strong id="couple"> 65.80 </strong>
+
+            <small> N·m </small>
+          </div>
+
+          <!-- RESULT GRID -->
+
+          <div class="result-grid">
+            <div class="result-item">
+              <span> Moment of Inertia </span>
+
+              <strong id="inertia"> 0.1000 </strong>
+
+              <small> kg·m² </small>
+            </div>
+
+            <div class="result-item">
+              <span> Radius of Gyration </span>
+
+              <strong id="gyration"> 0.1414 </strong>
+
+              <small> m </small>
+            </div>
+
+            <div class="result-item">
+              <span> Angular Velocity </span>
+
+              <strong id="omega"> 104.72 </strong>
+
+              <small> rad/s </small>
+            </div>
+
+            <div class="result-item">
+              <span> Precession Velocity </span>
+
+              <strong id="omegaP"> 6.28 </strong>
+
+              <small> rad/s </small>
+            </div>
+          </div>
+
+          <!-- EQUATION -->
+
+          <div class="result-equation">
+            <span> GOVERNING EQUATION </span>
+
+            <strong> C = Iωωₚ </strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+     3D-STYLE VISUALIZATION
+========================================================= -->
+
+    <section class="section dark-section" id="visualization">
+      <div class="section-heading">
+        <span class="small-title"> ENGINEERING SIMULATION </span>
+
+        <h2>Rotating Wheel Visualization</h2>
+
+        <p>
+          Interactive representation of spin, precession and gyroscopic action.
+        </p>
+      </div>
+
+      <div class="simulation-layout">
+        <!-- SIMULATION -->
+
+        <div class="simulation-card">
+          <canvas id="wheelCanvas" width="720" height="500"> </canvas>
+
+          <div class="simulation-overlay">
+            <div class="simulation-value">
+              <span> SPIN SPEED </span>
+
+              <strong id="visualSpeed"> 1000 RPM </strong>
+            </div>
+
+            <div class="simulation-value">
+              <span> PRECESSION </span>
+
+              <strong id="visualPrecession"> 60 RPM </strong>
+            </div>
+
+            <div class="simulation-value">
+              <span> COUPLE </span>
+
+              <strong id="visualCouple"> 65.80 N·m </strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- MOTION INFORMATION -->
+
+        <div class="motion-panel">
+          <div class="motion-item">
+            <div class="motion-icon">ω</div>
+
+            <div>
+              <strong> Spin Motion </strong>
+
+              <p>Rotation of the wheel around its own axis.</p>
+            </div>
+          </div>
+
+          <div class="motion-item">
+            <div class="motion-icon">ωₚ</div>
+
+            <div>
+              <strong> Precession Motion </strong>
+
+              <p>Rotation of the wheel axis around the precession axis.</p>
+            </div>
+          </div>
+
+          <div class="motion-item">
+            <div class="motion-icon">C</div>
+
+            <div>
+              <strong> Gyroscopic Couple </strong>
+
+              <p>
+                Reaction couple generated due to the change in angular momentum
+                direction.
+              </p>
+            </div>
+          </div>
+
+          <div class="axis-legend">
+            <div>
+              <span class="legend-dot spin-dot"></span>
+              Spin Axis
+            </div>
+
+            <div>
+              <span class="legend-dot precession-dot"></span>
+              Precession Axis
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+     CALCULATION SECTION
+========================================================= -->
+
+    <section class="section" id="calculation">
+      <div class="section-heading">
+        <span class="small-title"> MATHEMATICAL MODEL </span>
+
+        <h2>Calculation & Theory</h2>
+
+        <p>Mathematical equations used by the computational model.</p>
+      </div>
+
+      <!-- TAB BUTTONS -->
+
+      <div class="calculation-tabs">
+        <button class="calc-tab active" onclick="openCalcTab('formula')">
+          Formula
+        </button>
+
+        <button class="calc-tab" onclick="openCalcTab('steps')">
+          Step-by-Step
+        </button>
+
+        <button class="calc-tab" onclick="openCalcTab('assumptions')">
+          Assumptions
+        </button>
+      </div>
+
+      <!-- =====================================================
+         FORMULA TAB
+    ====================================================== -->
+
+      <div id="formulaTab" class="calc-tab-content active">
+        <div class="formula-grid">
+          <div class="formula-card">
+            <span> EQUATION 01 </span>
+
+            <h3>Gyroscopic Couple</h3>
+
+            <div class="formula">C = Iωωₚ</div>
+
+            <p>
+              The gyroscopic couple is the product of moment of inertia, spin
+              angular velocity and precession angular velocity.
+            </p>
+          </div>
+
+          <div class="formula-card">
+            <span> EQUATION 02 </span>
+
+            <h3>Wheel Angular Velocity</h3>
+
+            <div class="formula">ω = 2πN / 60</div>
+
+            <p>Converts wheel speed from RPM into radians per second.</p>
+          </div>
+
+          <div class="formula-card">
+            <span> EQUATION 03 </span>
+
+            <h3>Precession Angular Velocity</h3>
+
+            <div class="formula">ωₚ = 2πNₚ / 60</div>
+
+            <p>Converts precession speed from RPM into radians per second.</p>
+          </div>
+
+          <div class="formula-card">
+            <span> EQUATION 04 </span>
+
+            <h3>Solid Disc</h3>
+
+            <div class="formula">I = ½mR²</div>
+
+            <p>Moment of inertia of a solid disc about its central axis.</p>
+          </div>
+
+          <div class="formula-card">
+            <span> EQUATION 05 </span>
+
+            <h3>Thin Ring</h3>
+
+            <div class="formula">I = mR²</div>
+
+            <p>Moment of inertia of a thin ring about its central axis.</p>
+          </div>
+
+          <div class="formula-card highlight-formula">
+            <span> FINAL MODEL </span>
+
+            <h3>Computational Relation</h3>
+
+            <div class="formula">C = I × (2πN/60) × (2πNₚ/60)</div>
+
+            <p>Final computational equation used by the analyzer.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- =====================================================
+         STEP TAB
+    ====================================================== -->
+
+      <div id="stepsTab" class="calc-tab-content">
+        <div class="calculation-breakdown">
+          <div class="calculation-step">
+            <div class="step-number">01</div>
+
+            <div class="step-content">
+              <h4>Moment of Inertia</h4>
+
+              <div class="step-formula">I = ½mR²</div>
+
+              <p id="stepInertia">I = 0.1000 kg·m²</p>
+            </div>
+          </div>
+
+          <div class="calculation-step">
+            <div class="step-number">02</div>
+
+            <div class="step-content">
+              <h4>Wheel Angular Velocity</h4>
+
+              <div class="step-formula">ω = 2πN / 60</div>
+
+              <p id="stepOmega">ω = 104.72 rad/s</p>
+            </div>
+          </div>
+
+          <div class="calculation-step">
+            <div class="step-number">03</div>
+
+            <div class="step-content">
+              <h4>Precession Angular Velocity</h4>
+
+              <div class="step-formula">ωₚ = 2πNₚ / 60</div>
+
+              <p id="stepOmegaP">ωₚ = 6.28 rad/s</p>
+            </div>
+          </div>
+
+          <div class="calculation-step final-step">
+            <div class="step-number">04</div>
+
+            <div class="step-content">
+              <h4>Gyroscopic Couple</h4>
+
+              <div class="step-formula">C = Iωωₚ</div>
+
+              <p id="stepCouple">C = 65.80 N·m</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =====================================================
+         ASSUMPTIONS TAB
+    ====================================================== -->
+
+      <div id="assumptionsTab" class="calc-tab-content">
+        <div class="assumptions-grid">
+          <div class="assumption-card">
+            <strong> 01 </strong>
+
+            <h3>Rigid Wheel</h3>
+
+            <p>
+              The rotating wheel is considered rigid and does not deform during
+              rotation.
+            </p>
+          </div>
+
+          <div class="assumption-card">
+            <strong> 02 </strong>
+
+            <h3>Constant Speed</h3>
+
+            <p>
+              Wheel speed and precession speed are assumed to remain constant.
+            </p>
+          </div>
+
+          <div class="assumption-card">
+            <strong> 03 </strong>
+
+            <h3>Negligible Friction</h3>
+
+            <p>Bearing friction and aerodynamic resistance are neglected.</p>
+          </div>
+
+          <div class="assumption-card">
+            <strong> 04 </strong>
+
+            <h3>Ideal Geometry</h3>
+
+            <p>
+              Mass is assumed to be uniformly distributed according to the
+              selected geometry.
+            </p>
+          </div>
+
+          <div class="assumption-card">
+            <strong> 05 </strong>
+
+            <h3>Small Precession Effects</h3>
+
+            <p>The model considers the standard gyroscopic couple relation.</p>
+          </div>
+
+          <div class="assumption-card">
+            <strong> 06 </strong>
+
+            <h3>SI Units</h3>
+
+            <p>
+              Calculations are performed using SI units throughout the model.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+     ANALYSIS
+========================================================= -->
+
+    <section class="section" id="analysis">
+      <div class="section-heading">
+        <span class="small-title"> PARAMETRIC ANALYSIS </span>
+
+        <h2>Performance Analysis</h2>
+
+        <p>
+          Observe how individual parameters affect the calculated gyroscopic
+          couple.
+        </p>
+      </div>
+
+      <div class="analysis-buttons">
+        <button class="analysis-btn active" onclick="showGraph('speed')">
+          Wheel Speed
+        </button>
+
+        <button class="analysis-btn" onclick="showGraph('precession')">
+          Precession Speed
+        </button>
+
+        <button class="analysis-btn" onclick="showGraph('mass')">Mass</button>
+
+        <button class="analysis-btn" onclick="showGraph('radius')">
+          Radius
+        </button>
+      </div>
+
+      <div class="chart-card">
+        <canvas id="analysisChart"> </canvas>
+      </div>
+    </section>
+
+    <!-- =========================================================
+     SENSITIVITY ANALYSIS
+========================================================= -->
+
+    <section class="section sensitivity-section">
+      <div class="section-heading">
+        <span class="small-title"> ENGINEERING INSIGHT </span>
+
+        <h2>Sensitivity Analysis</h2>
+
+        <p>Relative influence of major parameters on gyroscopic couple.</p>
+      </div>
+
+      <div class="sensitivity-grid">
+        <div class="sensitivity-card">
+          <div class="sensitivity-top">
+            <strong> Wheel Speed </strong>
+
+            <span> C ∝ N </span>
+          </div>
+
+          <div class="sensitivity-bar">
+            <div class="sensitivity-fill" style="width: 65%"></div>
+          </div>
+        </div>
+
+        <div class="sensitivity-card">
+          <div class="sensitivity-top">
+            <strong> Precession Speed </strong>
+
+            <span> C ∝ Nₚ </span>
+          </div>
+
+          <div class="sensitivity-bar">
+            <div class="sensitivity-fill" style="width: 50%"></div>
+          </div>
+        </div>
+
+        <div class="sensitivity-card">
+          <div class="sensitivity-top">
+            <strong> Mass </strong>
+
+            <span> C ∝ m </span>
+          </div>
+
+          <div class="sensitivity-bar">
+            <div class="sensitivity-fill" style="width: 55%"></div>
+          </div>
+        </div>
+
+        <div class="sensitivity-card">
+          <div class="sensitivity-top">
+            <strong> Radius </strong>
+
+            <span> C ∝ R² </span>
+          </div>
+
+          <div class="sensitivity-bar">
+            <div class="sensitivity-fill" style="width: 95%"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+     VALIDATION
+========================================================= -->
+
+    <section class="section validation-section" id="validation">
+      <div class="section-heading">
+        <span class="small-title"> BEYOND-SYLLABUS COMPONENT </span>
+
+        <h2>Computational Validation</h2>
+
+        <p>
+          Compare the computational result with an experimental or reference
+          value.
+        </p>
+      </div>
+
+      <div class="validation-grid">
+        <!-- COMPUTATIONAL -->
+
+        <div class="validation-card">
+          <div class="validation-card-title">COMPUTATIONAL RESULT</div>
+
+          <div class="validation-result">
+            <span> Calculated Couple </span>
+
+            <strong id="validationCalculated"> 65.80 </strong>
+
+            <small> N·m </small>
+          </div>
+        </div>
+
+        <!-- EXPERIMENTAL INPUT -->
+
+        <div class="validation-card">
+          <div class="validation-card-title">
+            EXPERIMENTAL / REFERENCE VALUE
+          </div>
+
+          <label class="validation-label"> Enter measured value </label>
+
+          <div class="validation-input">
+            <input
+              type="number"
+              id="experimentalCouple"
+              placeholder="Enter value"
+              step="0.01"
+              oninput="calculateValidation()"
+            />
+
+            <span> N·m </span>
+          </div>
+
+          <p class="validation-note">
+            Leave blank if experimental validation is not available.
+          </p>
+        </div>
+
+        <!-- ERROR -->
+
+        <div class="validation-card validation-result-card">
+          <div class="validation-card-title">VALIDATION STATUS</div>
+
+          <div class="error-result">
+            <span> Percentage Error </span>
+
+            <strong id="percentageError"> — </strong>
+
+            <small> % </small>
+          </div>
+
+          <div class="validation-status" id="validationStatus">
+            Waiting for reference value
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+     SYMBOLS
+========================================================= -->
+
+    <section class="section symbols-section">
+      <div class="section-heading">
+        <span class="small-title"> REFERENCE </span>
+
+        <h2>Symbols & Units</h2>
+      </div>
+
+      <div class="symbols-card">
+        <div class="symbol-row">
+          <span> C </span>
+
+          <p>Gyroscopic Couple</p>
+
+          <small> N·m </small>
+        </div>
+
+        <div class="symbol-row">
+          <span> I </span>
+
+          <p>Moment of Inertia</p>
+
+          <small> kg·m² </small>
+        </div>
+
+        <div class="symbol-row">
+          <span> ω </span>
+
+          <p>Wheel Angular Velocity</p>
+
+          <small> rad/s </small>
+        </div>
+
+        <div class="symbol-row">
+          <span> ωₚ </span>
+
+          <p>Precession Angular Velocity</p>
+
+          <small> rad/s </small>
+        </div>
+
+        <div class="symbol-row">
+          <span> m </span>
+
+          <p>Wheel Mass</p>
+
+          <small> kg </small>
+        </div>
+
+        <div class="symbol-row">
+          <span> R </span>
+
+          <p>Wheel Radius</p>
+
+          <small> m </small>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+     PROJECT INFORMATION
+========================================================= -->
+
+    <section class="project-info">
+      <div class="project-info-content">
+        <span class="small-title"> MICRO PROJECT </span>
+
+        <h2>Determination of Gyroscopic Couple</h2>
+
+        <p>
+          A computational model for determining gyroscopic couple for selected
+          wheel speed, precession speed and mass properties.
+        </p>
+
+        <div class="project-points">
+          <span> ✓ Mathematical Model </span>
+
+          <span> ✓ Computational Analysis </span>
+
+          <span> ✓ Interactive Visualization </span>
+
+          <span> ✓ Parametric Study </span>
+
+          <span> ✓ Validation Framework </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+     FOOTER
+========================================================= -->
+
+    <footer>
+      <div class="footer-logo">Gyro<span>Lab</span></div>
+
+      <p>Gyroscopic Couple Computational Analysis</p>
+
+      <small> Mechanical Engineering Micro Project </small>
+    </footer>
+
+    <!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+    <script>
+      /* =========================================================
+   GYROLAB - GYROSCOPIC COUPLE ANALYZER
+   Main JavaScript
+========================================================= */
+
+      /* =========================================================
+   GLOBAL VARIABLES
+========================================================= */
+
+      let analysisChart = null;
+
+      let currentGraph = "speed";
+
+      let animationAngle = 0;
+
+      let inputMode = "standard";
+
+      /* =========================================================
+   STANDARD PRESETS
+========================================================= */
+
+      const presets = {
+        standard1: {
+          mass: 5,
+          radius: 0.2,
+          wheelSpeed: 1000,
+          precessionSpeed: 60,
+        },
+
+        standard2: {
+          mass: 10,
+          radius: 0.25,
+          wheelSpeed: 1200,
+          precessionSpeed: 75,
+        },
+
+        standard3: {
+          mass: 8,
+          radius: 0.18,
+          wheelSpeed: 2000,
+          precessionSpeed: 100,
+        },
+      };
+
+      /* =========================================================
+   PAGE INITIALIZATION
+========================================================= */
+
+      document.addEventListener("DOMContentLoaded", function () {
+        applyPreset();
+
+        calculate();
+
+        initializeChart();
+
+        drawGyroscope();
+
+        startAnimation();
+      });
+
+      /* =========================================================
+   HELPER
+========================================================= */
+
+      function getNumber(id) {
+        const element = document.getElementById(id);
+
+        if (!element) {
+          return 0;
+        }
+
+        const value = parseFloat(element.value);
+
+        if (isNaN(value)) {
+          return 0;
+        }
+
+        return value;
+      }
+
+      /* =========================================================
+   GET CURRENT INPUT VALUES
+========================================================= */
+
+      function getInputs() {
+        return {
+          mass: getNumber("mass"),
+
+          radius: getNumber("radius"),
+
+          wheelSpeed: getNumber("wheelSpeed"),
+
+          precessionSpeed: getNumber("precessionSpeed"),
+
+          wheelType: document.getElementById("wheelType").value,
+        };
+      }
+
+      /* =========================================================
+   CALCULATE GYROSCOPIC COUPLE
+========================================================= */
+
+      function calculate() {
+        const data = getInputs();
+
+        /* -----------------------------------------------------
+       Basic validation
+    ----------------------------------------------------- */
+
+        if (
+          data.mass <= 0 ||
+          data.radius <= 0 ||
+          data.wheelSpeed <= 0 ||
+          data.precessionSpeed <= 0
+        ) {
+          return;
+        }
+
+        /* -----------------------------------------------------
+       Moment of inertia
+    ----------------------------------------------------- */
+
+        let inertia;
+
+        if (data.wheelType === "ring") {
+          // Thin ring
+          inertia = data.mass * Math.pow(data.radius, 2);
+        } else {
+          // Solid disc
+          inertia = 0.5 * data.mass * Math.pow(data.radius, 2);
+        }
+
+        /* -----------------------------------------------------
+       Radius of gyration
+    ----------------------------------------------------- */
+
+        const gyration = Math.sqrt(inertia / data.mass);
+
+        /* -----------------------------------------------------
+       Convert RPM → rad/s
+    ----------------------------------------------------- */
+
+        const omega = (2 * Math.PI * data.wheelSpeed) / 60;
+
+        const omegaP = (2 * Math.PI * data.precessionSpeed) / 60;
+
+        /* -----------------------------------------------------
+       Gyroscopic Couple
+    ----------------------------------------------------- */
+
+        const couple = inertia * omega * omegaP;
+
+        /* -----------------------------------------------------
+       Update UI
+    ----------------------------------------------------- */
+
+        updateValue("couple", couple.toFixed(2));
+
+        updateValue("inertia", inertia.toFixed(4));
+
+        updateValue("gyration", gyration.toFixed(4));
+
+        updateValue("omega", omega.toFixed(2));
+
+        updateValue("omegaP", omegaP.toFixed(2));
+
+        /* -----------------------------------------------------
+       Update step-by-step calculation
+    ----------------------------------------------------- */
+
+        updateValue("stepInertia", `I = ${inertia.toFixed(4)} kg·m²`);
+
+        updateValue("stepOmega", `ω = ${omega.toFixed(2)} rad/s`);
+
+        updateValue("stepOmegaP", `ωₚ = ${omegaP.toFixed(2)} rad/s`);
+
+        updateValue("stepCouple", `C = ${couple.toFixed(2)} N·m`);
+
+        /* -----------------------------------------------------
+       Visualization values
+    ----------------------------------------------------- */
+
+        updateValue("visualSpeed", `${data.wheelSpeed.toFixed(0)} RPM`);
+
+        updateValue(
+          "visualPrecession",
+          `${data.precessionSpeed.toFixed(0)} RPM`,
+        );
+
+        updateValue("visualCouple", `${couple.toFixed(2)} N·m`);
+
+        /* -----------------------------------------------------
+       Validation
+    ----------------------------------------------------- */
+
+        updateValue("validationCalculated", couple.toFixed(2));
+
+        calculateValidation();
+
+        /* -----------------------------------------------------
+       Update graph
+    ----------------------------------------------------- */
+
+        updateAnalysisChart();
+
+        /* -----------------------------------------------------
+       Redraw wheel
+    ----------------------------------------------------- */
+
+        drawGyroscope();
+      }
+
+      /* =========================================================
+   UPDATE HTML VALUE
+========================================================= */
+
+      function updateValue(id, value) {
+        const element = document.getElementById(id);
+
+        if (element) {
+          element.textContent = value;
+        }
+      }
+
+      /* =========================================================
+   SLIDER → NUMBER INPUT
+========================================================= */
+
+      function syncSlider(parameter) {
+        const slider = document.getElementById(parameter + "Slider");
+
+        const input = document.getElementById(parameter);
+
+        if (!slider || !input) {
+          return;
+        }
+
+        input.value = slider.value;
+
+        calculate();
+      }
+
+      /* =========================================================
+   NUMBER INPUT → SLIDER
+========================================================= */
+
+      function syncInput(parameter) {
+        const input = document.getElementById(parameter);
+
+        const slider = document.getElementById(parameter + "Slider");
+
+        if (!input || !slider) {
+          return;
+        }
+
+        slider.value = input.value;
+
+        calculate();
+      }
+
+      /* =========================================================
+   APPLY STANDARD PRESET
+========================================================= */
+
+      function applyPreset() {
+        const presetElement = document.getElementById("preset");
+
+        if (!presetElement) {
+          return;
+        }
+
+        const selected = presets[presetElement.value];
+
+        if (!selected) {
+          return;
+        }
+
+        setInput("mass", selected.mass);
+
+        setInput("radius", selected.radius);
+
+        setInput("wheelSpeed", selected.wheelSpeed);
+
+        setInput("precessionSpeed", selected.precessionSpeed);
+
+        calculate();
+      }
+
+      /* =========================================================
+   SET INPUT + SLIDER
+========================================================= */
+
+      function setInput(parameter, value) {
+        const input = document.getElementById(parameter);
+
+        const slider = document.getElementById(parameter + "Slider");
+
+        if (input) {
+          input.value = value;
+        }
+
+        if (slider) {
+          slider.value = value;
+        }
+      }
+
+      /* =========================================================
+   INPUT MODE
+========================================================= */
+
+      function setInputMode(mode) {
+        inputMode = mode;
+
+        const standardButton = document.getElementById("standardModeBtn");
+
+        const customButton = document.getElementById("customModeBtn");
+
+        const presetGroup = document.getElementById("presetGroup");
+
+        if (mode === "standard") {
+          standardButton.classList.add("active");
+
+          customButton.classList.remove("active");
+
+          presetGroup.style.display = "block";
+
+          applyPreset();
+        } else {
+          standardButton.classList.remove("active");
+
+          customButton.classList.add("active");
+
+          presetGroup.style.display = "none";
+        }
+      }
+
+      /* =========================================================
+   RESET
+========================================================= */
+
+      function resetInputs() {
+        document.getElementById("wheelType").value = "disc";
+
+        document.getElementById("preset").value = "standard1";
+
+        setInput("mass", 5);
+
+        setInput("radius", 0.2);
+
+        setInput("wheelSpeed", 1000);
+
+        setInput("precessionSpeed", 60);
+
+        const experimental = document.getElementById("experimentalCouple");
+
+        if (experimental) {
+          experimental.value = "";
+        }
+
+        calculate();
+      }
+
+      /* =========================================================
+   CALCULATION TABS
+========================================================= */
+
+      function openCalcTab(tabName) {
+        const contents = document.querySelectorAll(".calc-tab-content");
+
+        contents.forEach(function (content) {
+          content.classList.remove("active");
+        });
+
+        const tabs = document.querySelectorAll(".calc-tab");
+
+        tabs.forEach(function (tab) {
+          tab.classList.remove("active");
+        });
+
+        const selectedContent = document.getElementById(tabName + "Tab");
+
+        if (selectedContent) {
+          selectedContent.classList.add("active");
+        }
+
+        tabs.forEach(function (tab) {
+          const text = tab.textContent.trim().toLowerCase();
+
+          if (
+            (tabName === "formula" && text.includes("formula")) ||
+            (tabName === "steps" && text.includes("step")) ||
+            (tabName === "assumptions" && text.includes("assumption"))
+          ) {
+            tab.classList.add("active");
+          }
+        });
+      }
+
+      /* =========================================================
+   CHART INITIALIZATION
+========================================================= */
+
+      function initializeChart() {
+        const canvas = document.getElementById("analysisChart");
+
+        if (!canvas) {
+          return;
+        }
+
+        const context = canvas.getContext("2d");
+
+        analysisChart = new Chart(context, {
+          type: "line",
+
+          data: {
+            labels: [],
+
+            datasets: [
+              {
+                label: "Gyroscopic Couple (N·m)",
+
+                data: [],
+
+                borderWidth: 3,
+
+                pointRadius: 4,
+
+                tension: 0.35,
+
+                fill: false,
+              },
+            ],
+          },
+
+          options: {
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            interaction: {
+              intersect: false,
+
+              mode: "index",
+            },
+
+            plugins: {
+              legend: {
+                display: true,
+              },
+            },
+
+            scales: {
+              x: {
+                title: {
+                  display: true,
+
+                  text: "Parameter",
+                },
+              },
+
+              y: {
+                beginAtZero: true,
+
+                title: {
+                  display: true,
+
+                  text: "Gyroscopic Couple (N·m)",
+                },
+              },
+            },
+          },
+        });
+
+        updateAnalysisChart();
+      }
+
+      /* =========================================================
+   CREATE GRAPH DATA
+========================================================= */
+
+      function generateGraphData(type) {
+        const data = getInputs();
+
+        let labels = [];
+
+        let values = [];
+
+        const points = 12;
+
+        /* -----------------------------------------------------
+       Wheel Speed
+    ----------------------------------------------------- */
+
+        if (type === "speed") {
+          const min = 200;
+
+          const max = Math.max(data.wheelSpeed * 1.8, 1500);
+
+          for (let i = 0; i < points; i++) {
+            const speed = min + ((max - min) * i) / (points - 1);
+
+            const omega = (2 * Math.PI * speed) / 60;
+
+            const omegaP = (2 * Math.PI * data.precessionSpeed) / 60;
+
+            const inertia = getInertia(data.mass, data.radius, data.wheelType);
+
+            const couple = inertia * omega * omegaP;
+
+            labels.push(Math.round(speed));
+
+            values.push(Number(couple.toFixed(2)));
+          }
+        } else if (type === "precession") {
+          /* -----------------------------------------------------
+       Precession Speed
+    ----------------------------------------------------- */
+          const min = 5;
+
+          const max = Math.max(data.precessionSpeed * 2, 150);
+
+          for (let i = 0; i < points; i++) {
+            const speed = min + ((max - min) * i) / (points - 1);
+
+            const omega = (2 * Math.PI * data.wheelSpeed) / 60;
+
+            const omegaP = (2 * Math.PI * speed) / 60;
+
+            const inertia = getInertia(data.mass, data.radius, data.wheelType);
+
+            const couple = inertia * omega * omegaP;
+
+            labels.push(Math.round(speed));
+
+            values.push(Number(couple.toFixed(2)));
+          }
+        } else if (type === "mass") {
+          /* -----------------------------------------------------
+       MASS
+    ----------------------------------------------------- */
+          const min = 1;
+
+          const max = 20;
+
+          for (let i = 0; i < points; i++) {
+            const mass = min + ((max - min) * i) / (points - 1);
+
+            const inertia = getInertia(mass, data.radius, data.wheelType);
+
+            const omega = (2 * Math.PI * data.wheelSpeed) / 60;
+
+            const omegaP = (2 * Math.PI * data.precessionSpeed) / 60;
+
+            const couple = inertia * omega * omegaP;
+
+            labels.push(Number(mass.toFixed(1)));
+
+            values.push(Number(couple.toFixed(2)));
+          }
+        } else if (type === "radius") {
+          /* -----------------------------------------------------
+       RADIUS
+    ----------------------------------------------------- */
+          const min = 0.05;
+
+          const max = 0.5;
+
+          for (let i = 0; i < points; i++) {
+            const radius = min + ((max - min) * i) / (points - 1);
+
+            const inertia = getInertia(data.mass, radius, data.wheelType);
+
+            const omega = (2 * Math.PI * data.wheelSpeed) / 60;
+
+            const omegaP = (2 * Math.PI * data.precessionSpeed) / 60;
+
+            const couple = inertia * omega * omegaP;
+
+            labels.push(Number(radius.toFixed(2)));
+
+            values.push(Number(couple.toFixed(2)));
+          }
+        }
+
+        return {
+          labels,
+          values,
+        };
+      }
+
+      /* =========================================================
+   MOMENT OF INERTIA FUNCTION
+========================================================= */
+
+      function getInertia(mass, radius, wheelType) {
+        if (wheelType === "ring") {
+          return mass * Math.pow(radius, 2);
+        }
+
+        return 0.5 * mass * Math.pow(radius, 2);
+      }
+
+      /* =========================================================
+   UPDATE ANALYSIS GRAPH
+========================================================= */
+
+      function updateAnalysisChart() {
+        if (!analysisChart) {
+          return;
+        }
+
+        const graph = generateGraphData(currentGraph);
+
+        let xTitle = "Wheel Speed (RPM)";
+
+        if (currentGraph === "precession") {
+          xTitle = "Precession Speed (RPM)";
+        }
+
+        if (currentGraph === "mass") {
+          xTitle = "Wheel Mass (kg)";
+        }
+
+        if (currentGraph === "radius") {
+          xTitle = "Wheel Radius (m)";
+        }
+
+        analysisChart.data.labels = graph.labels;
+
+        analysisChart.data.datasets[0].data = graph.values;
+
+        analysisChart.options.scales.x.title.text = xTitle;
+
+        analysisChart.update();
+      }
+
+      /* =========================================================
+   CHANGE GRAPH
+========================================================= */
+
+      function showGraph(type) {
+        currentGraph = type;
+
+        const buttons = document.querySelectorAll(".analysis-btn");
+
+        buttons.forEach(function (button) {
+          button.classList.remove("active");
+        });
+
+        const clickedButton = Array.from(buttons).find((button) =>
+          button.textContent.toLowerCase().includes(getGraphButtonText(type)),
+        );
+
+        if (clickedButton) {
+          clickedButton.classList.add("active");
+        }
+
+        updateAnalysisChart();
+      }
+
+      /* =========================================================
+   GRAPH BUTTON TEXT
+========================================================= */
+
+      function getGraphButtonText(type) {
+        if (type === "speed") {
+          return "wheel";
+        }
+
+        if (type === "precession") {
+          return "precession";
+        }
+
+        if (type === "mass") {
+          return "mass";
+        }
+
+        if (type === "radius") {
+          return "radius";
+        }
+
+        return "";
+      }
+
+      /* =========================================================
+   VALIDATION
+========================================================= */
+
+      function calculateValidation() {
+        const calculatedElement = document.getElementById(
+          "validationCalculated",
+        );
+
+        const experimentalElement =
+          document.getElementById("experimentalCouple");
+
+        const errorElement = document.getElementById("percentageError");
+
+        const statusElement = document.getElementById("validationStatus");
+
+        if (
+          !calculatedElement ||
+          !experimentalElement ||
+          !errorElement ||
+          !statusElement
+        ) {
+          return;
+        }
+
+        const calculated = parseFloat(calculatedElement.textContent);
+
+        const experimental = parseFloat(experimentalElement.value);
+
+        if (isNaN(experimental) || experimental <= 0) {
+          errorElement.textContent = "—";
+
+          statusElement.textContent = "Waiting for reference value";
+
+          statusElement.className = "validation-status";
+
+          return;
+        }
+
+        const error =
+          Math.abs((calculated - experimental) / experimental) * 100;
+
+        errorElement.textContent = error.toFixed(2);
+
+        if (error <= 5) {
+          statusElement.textContent = "✓ GOOD AGREEMENT";
+
+          statusElement.className = "validation-status success";
+        } else if (error <= 10) {
+          statusElement.textContent = "⚠ ACCEPTABLE DIFFERENCE";
+
+          statusElement.className = "validation-status warning";
+        } else {
+          statusElement.textContent = "✕ HIGH DIFFERENCE";
+
+          statusElement.className = "validation-status danger";
+        }
+      }
+
+      /* =========================================================
+   CANVAS GYROSCOPE
+========================================================= */
+
+      function drawGyroscope() {
+        const canvas = document.getElementById("wheelCanvas");
+
+        if (!canvas) {
+          return;
+        }
+
+        const ctx = canvas.getContext("2d");
+
+        const width = canvas.width;
+
+        const height = canvas.height;
+
+        /* Clear */
+
+        ctx.clearRect(0, 0, width, height);
+
+        /* -----------------------------------------------------
+       Background
+    ----------------------------------------------------- */
+
+        const gradient = ctx.createRadialGradient(
+          width / 2,
+          height / 2,
+          20,
+          width / 2,
+          height / 2,
+          350,
+        );
+
+        gradient.addColorStop(0, "rgba(40, 120, 255, 0.10)");
+
+        gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
+
+        ctx.fillStyle = gradient;
+
+        ctx.fillRect(0, 0, width, height);
+
+        /* -----------------------------------------------------
+       Center
+    ----------------------------------------------------- */
+
+        const cx = width / 2;
+
+        const cy = height / 2;
+
+        const radius = Math.min(width, height) * 0.25;
+
+        /* -----------------------------------------------------
+       Precession orbit
+    ----------------------------------------------------- */
+
+        ctx.save();
+
+        ctx.strokeStyle = "rgba(90, 160, 255, 0.25)";
+
+        ctx.lineWidth = 2;
+
+        ctx.setLineDash([7, 7]);
+
+        ctx.beginPath();
+
+        ctx.ellipse(cx, cy, radius * 1.55, radius * 0.65, 0, 0, Math.PI * 2);
+
+        ctx.stroke();
+
+        ctx.setLineDash([]);
+
+        ctx.restore();
+
+        /* -----------------------------------------------------
+       Rotating wheel
+    ----------------------------------------------------- */
+
+        ctx.save();
+
+        ctx.translate(cx, cy);
+
+        ctx.rotate(animationAngle);
+
+        /* Outer wheel */
+
+        ctx.beginPath();
+
+        ctx.ellipse(0, 0, radius, radius * 0.34, 0, 0, Math.PI * 2);
+
+        ctx.strokeStyle = "rgba(80, 160, 255, 0.95)";
+
+        ctx.lineWidth = 8;
+
+        ctx.stroke();
+
+        /* Inner wheel */
+
+        ctx.beginPath();
+
+        ctx.ellipse(0, 0, radius * 0.72, radius * 0.24, 0, 0, Math.PI * 2);
+
+        ctx.strokeStyle = "rgba(100, 180, 255, 0.45)";
+
+        ctx.lineWidth = 3;
+
+        ctx.stroke();
+
+        /* Spokes */
+
+        for (let i = 0; i < 8; i++) {
+          const angle = (Math.PI * 2 * i) / 8;
+
+          const x = Math.cos(angle) * radius;
+
+          const y = Math.sin(angle) * radius * 0.34;
+
+          ctx.beginPath();
+
+          ctx.moveTo(0, 0);
+
+          ctx.lineTo(x, y);
+
+          ctx.strokeStyle = "rgba(120, 190, 255, 0.45)";
+
+          ctx.lineWidth = 2;
+
+          ctx.stroke();
+        }
+
+        /* Hub */
+
+        ctx.beginPath();
+
+        ctx.arc(0, 0, radius * 0.12, 0, Math.PI * 2);
+
+        ctx.fillStyle = "rgba(100, 180, 255, 1)";
+
+        ctx.fill();
+
+        ctx.restore();
+
+        /* -----------------------------------------------------
+       Spin axis
+    ----------------------------------------------------- */
+
+        ctx.save();
+
+        ctx.translate(cx, cy);
+
+        ctx.rotate(-0.45);
+
+        ctx.beginPath();
+
+        ctx.moveTo(-radius * 1.5, 0);
+
+        ctx.lineTo(radius * 1.5, 0);
+
+        ctx.strokeStyle = "rgba(70, 170, 255, 0.75)";
+
+        ctx.lineWidth = 2;
+
+        ctx.stroke();
+
+        /* Arrow */
+
+        drawArrow(ctx, radius * 1.5, 0, radius * 1.15, 0);
+
+        ctx.restore();
+
+        /* -----------------------------------------------------
+       Precession axis
+    ----------------------------------------------------- */
+
+        ctx.beginPath();
+
+        ctx.moveTo(cx, cy - radius * 1.55);
+
+        ctx.lineTo(cx, cy + radius * 1.55);
+
+        ctx.strokeStyle = "rgba(120, 220, 255, 0.55)";
+
+        ctx.lineWidth = 2;
+
+        ctx.stroke();
+
+        /* Precession arrow */
+
+        drawArrow(ctx, cx, cy - radius * 1.55, cx, cy - radius * 1.15);
+
+        /* -----------------------------------------------------
+       Labels
+    ----------------------------------------------------- */
+
+        ctx.font = "bold 15px Arial";
+
+        ctx.fillStyle = "rgba(130, 200, 255, 0.95)";
+
+        ctx.fillText("ω  Spin", cx + radius * 1.25, cy - radius * 0.9);
+
+        ctx.fillStyle = "rgba(150, 220, 255, 0.95)";
+
+        ctx.fillText("ωₚ  Precession", cx + 15, cy - radius * 1.4);
+
+        ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+
+        ctx.font = "13px Arial";
+
+        ctx.fillText("Rotating Wheel", cx - 48, cy + radius * 1.4);
+      }
+
+      /* =========================================================
+   DRAW ARROW
+========================================================= */
+
+      function drawArrow(ctx, fromX, fromY, toX, toY) {
+        const headLength = 12;
+
+        const angle = Math.atan2(toY - fromY, toX - fromX);
+
+        ctx.beginPath();
+
+        ctx.moveTo(toX, toY);
+
+        ctx.lineTo(
+          toX - headLength * Math.cos(angle - Math.PI / 6),
+
+          toY - headLength * Math.sin(angle - Math.PI / 6),
+        );
+
+        ctx.moveTo(toX, toY);
+
+        ctx.lineTo(
+          toX - headLength * Math.cos(angle + Math.PI / 6),
+
+          toY - headLength * Math.sin(angle + Math.PI / 6),
+        );
+
+        ctx.stroke();
+      }
+
+      /* =========================================================
+   ANIMATION
+========================================================= */
+
+      function startAnimation() {
+        const speed = getNumber("wheelSpeed");
+
+        animationAngle += 0.005 * Math.max(speed / 500, 0.5);
+
+        drawGyroscope();
+
+        requestAnimationFrame(startAnimation);
+      }
+
+      /* =========================================================
+   SCROLL
+========================================================= */
+
+      function scrollToSection(id) {
+        const section = document.getElementById(id);
+
+        if (!section) {
+          return;
+        }
+
+        section.scrollIntoView({
+          behavior: "smooth",
+
+          block: "start",
+        });
+      }
+
+      /* =========================================================
+   KEYBOARD SHORTCUTS
+========================================================= */
+
+      document.addEventListener("keydown", function (event) {
+        /* R = reset */
+
+        if (event.key.toLowerCase() === "r" && !isTyping()) {
+          resetInputs();
+        }
+
+        /* 1 = speed graph */
+
+        if (event.key === "1" && !isTyping()) {
+          showGraph("speed");
+        }
+
+        /* 2 = precession graph */
+
+        if (event.key === "2" && !isTyping()) {
+          showGraph("precession");
+        }
+
+        /* 3 = mass graph */
+
+        if (event.key === "3" && !isTyping()) {
+          showGraph("mass");
+        }
+
+        /* 4 = radius graph */
+
+        if (event.key === "4" && !isTyping()) {
+          showGraph("radius");
+        }
+      });
+
+      /* =========================================================
+   CHECK IF USER IS TYPING
+========================================================= */
+
+      function isTyping() {
+        const active = document.activeElement;
+
+        if (!active) {
+          return false;
+        }
+
+        return (
+          active.tagName === "INPUT" ||
+          active.tagName === "TEXTAREA" ||
+          active.tagName === "SELECT"
+        );
+      }
+
+      /* =========================================================
+   HANDLE WHEEL TYPE CHANGE
+========================================================= */
+
+      const wheelTypeElement = document.getElementById("wheelType");
+
+      if (wheelTypeElement) {
+        wheelTypeElement.addEventListener("change", function () {
+          calculate();
+        });
+      }
+
+      /* =========================================================
+   HANDLE WINDOW RESIZE
+========================================================= */
+
+      window.addEventListener("resize", function () {
+        drawGyroscope();
+      });
+    </script>
+  </body>
+</html>
