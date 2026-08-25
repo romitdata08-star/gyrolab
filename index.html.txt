@@ -1,0 +1,1868 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>GyroLab | Gyroscopic Couple Analyzer</title>
+
+    <!-- Chart.js for analysis graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Your stylesheet -->
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     NAVIGATION
+========================================================= -->
+
+<header class="navbar">
+
+    <div class="logo">
+        Gyro<span>Lab</span>
+    </div>
+
+    <nav>
+
+        <a href="#analyzer">
+            Analyzer
+        </a>
+
+        <a href="#visualization">
+            Visualization
+        </a>
+
+        <a href="#calculation">
+            Calculation
+        </a>
+
+        <a href="#analysis">
+            Analysis
+        </a>
+
+        <a href="#validation">
+            Validation
+        </a>
+
+    </nav>
+
+    <div class="project-tag">
+        MECHANICAL ENGINEERING
+    </div>
+
+</header>
+
+
+
+<!-- =========================================================
+     HERO SECTION
+========================================================= -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <div class="badge">
+            COMPUTATIONAL ENGINEERING MODEL
+        </div>
+
+        <h1>
+            Gyroscopic
+            <span>Couple</span>
+            Analyzer
+        </h1>
+
+        <p>
+            Computational analysis of gyroscopic couple
+            for a rotating wheel using wheel speed,
+            precession speed and mass properties.
+        </p>
+
+        <div class="hero-buttons">
+
+            <button
+                class="primary-button"
+                onclick="scrollToSection('analyzer')">
+
+                Start Analysis →
+
+            </button>
+
+            <button
+                class="secondary-button"
+                onclick="scrollToSection('visualization')">
+
+                View Simulation
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- Hero wheel -->
+
+    <div class="hero-wheel-container">
+
+        <div class="hero-wheel">
+
+            <div class="hero-wheel-ring">
+
+                <div class="hero-spoke spoke-1"></div>
+                <div class="hero-spoke spoke-2"></div>
+                <div class="hero-spoke spoke-3"></div>
+                <div class="hero-spoke spoke-4"></div>
+                <div class="hero-spoke spoke-5"></div>
+                <div class="hero-spoke spoke-6"></div>
+
+                <div class="hero-hub"></div>
+
+            </div>
+
+        </div>
+
+        <div class="hero-wheel-label">
+            ROTATING GYROSCOPE
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     QUICK STATISTICS
+========================================================= -->
+
+<section class="quick-stats">
+
+    <div class="quick-stat">
+
+        <strong>
+            C = Iωωₚ
+        </strong>
+
+        <span>
+            Governing Equation
+        </span>
+
+    </div>
+
+
+    <div class="quick-stat">
+
+        <strong>
+            RPM → rad/s
+        </strong>
+
+        <span>
+            Angular Velocity Conversion
+        </span>
+
+    </div>
+
+
+    <div class="quick-stat">
+
+        <strong>
+            Live
+        </strong>
+
+        <span>
+            Computational Calculation
+        </span>
+
+    </div>
+
+
+    <div class="quick-stat">
+
+        <strong>
+            2 Models
+        </strong>
+
+        <span>
+            Disc & Ring
+        </span>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     ANALYZER
+========================================================= -->
+
+<section
+    class="section"
+    id="analyzer">
+
+    <div class="section-heading">
+
+        <span class="small-title">
+            INPUT & CALCULATION
+        </span>
+
+        <h2>
+            Gyroscopic Couple Analyzer
+        </h2>
+
+        <p>
+            Configure the rotating wheel and observe
+            the calculated gyroscopic couple in real time.
+        </p>
+
+    </div>
+
+
+    <div class="analyzer-layout">
+
+
+        <!-- =================================================
+             INPUT PANEL
+        ================================================== -->
+
+        <div class="card input-card">
+
+            <div class="card-title">
+
+                <span class="card-icon">
+                    ⚙
+                </span>
+
+                Input Parameters
+
+            </div>
+
+
+            <!-- MODE SWITCH -->
+
+            <div class="input-mode">
+
+                <button
+                    id="standardModeBtn"
+                    class="mode-btn active"
+                    onclick="setInputMode('standard')">
+
+                    Standard Values
+
+                </button>
+
+                <button
+                    id="customModeBtn"
+                    class="mode-btn"
+                    onclick="setInputMode('custom')">
+
+                    Custom Values
+
+                </button>
+
+            </div>
+
+
+            <!-- STANDARD PRESET -->
+
+            <div
+                class="input-group"
+                id="presetGroup">
+
+                <label>
+                    Standard Wheel
+                </label>
+
+                <select
+                    id="preset"
+                    onchange="applyPreset()">
+
+                    <option value="standard1">
+                        Standard Wheel — 5 kg
+                    </option>
+
+                    <option value="standard2">
+                        Medium Wheel — 10 kg
+                    </option>
+
+                    <option value="standard3">
+                        High-Speed Wheel — 8 kg
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 WHEEL TYPE
+            ================================================== -->
+
+            <div class="input-group">
+
+                <label>
+                    Wheel Geometry
+                </label>
+
+                <select
+                    id="wheelType"
+                    onchange="calculate()">
+
+                    <option value="disc">
+                        Solid Disc
+                    </option>
+
+                    <option value="ring">
+                        Thin Ring
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 MASS
+            ================================================== -->
+
+            <div class="slider-input-group">
+
+                <div class="slider-header">
+
+                    <label>
+                        Wheel Mass
+                    </label>
+
+                    <span>
+                        kg
+                    </span>
+
+                </div>
+
+                <div class="slider-row">
+
+                    <input
+                        type="range"
+                        id="massSlider"
+                        min="1"
+                        max="20"
+                        step="0.1"
+                        value="5"
+                        oninput="syncSlider('mass')">
+
+                    <input
+                        type="number"
+                        id="mass"
+                        min="0.1"
+                        max="100"
+                        step="0.1"
+                        value="5"
+                        oninput="syncInput('mass')">
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 RADIUS
+            ================================================== -->
+
+            <div class="slider-input-group">
+
+                <div class="slider-header">
+
+                    <label>
+                        Wheel Radius
+                    </label>
+
+                    <span>
+                        m
+                    </span>
+
+                </div>
+
+                <div class="slider-row">
+
+                    <input
+                        type="range"
+                        id="radiusSlider"
+                        min="0.05"
+                        max="0.50"
+                        step="0.01"
+                        value="0.20"
+                        oninput="syncSlider('radius')">
+
+                    <input
+                        type="number"
+                        id="radius"
+                        min="0.01"
+                        max="2"
+                        step="0.01"
+                        value="0.20"
+                        oninput="syncInput('radius')">
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 WHEEL SPEED
+            ================================================== -->
+
+            <div class="slider-input-group">
+
+                <div class="slider-header">
+
+                    <label>
+                        Wheel Speed
+                    </label>
+
+                    <span>
+                        RPM
+                    </span>
+
+                </div>
+
+                <div class="slider-row">
+
+                    <input
+                        type="range"
+                        id="wheelSpeedSlider"
+                        min="100"
+                        max="3000"
+                        step="50"
+                        value="1000"
+                        oninput="syncSlider('wheelSpeed')">
+
+                    <input
+                        type="number"
+                        id="wheelSpeed"
+                        min="1"
+                        max="10000"
+                        step="50"
+                        value="1000"
+                        oninput="syncInput('wheelSpeed')">
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 PRECESSION SPEED
+            ================================================== -->
+
+            <div class="slider-input-group">
+
+                <div class="slider-header">
+
+                    <label>
+                        Precession Speed
+                    </label>
+
+                    <span>
+                        RPM
+                    </span>
+
+                </div>
+
+                <div class="slider-row">
+
+                    <input
+                        type="range"
+                        id="precessionSpeedSlider"
+                        min="5"
+                        max="200"
+                        step="5"
+                        value="60"
+                        oninput="syncSlider('precessionSpeed')">
+
+                    <input
+                        type="number"
+                        id="precessionSpeed"
+                        min="1"
+                        max="1000"
+                        step="5"
+                        value="60"
+                        oninput="syncInput('precessionSpeed')">
+
+                </div>
+
+            </div>
+
+
+
+            <!-- RESET -->
+
+            <button
+                class="reset-button"
+                onclick="resetInputs()">
+
+                ↻ Reset Parameters
+
+            </button>
+
+        </div>
+
+
+
+        <!-- =================================================
+             LIVE RESULT PANEL
+        ================================================== -->
+
+        <div class="card result-card">
+
+            <div class="result-top">
+
+                <div>
+
+                    <div class="card-title">
+
+                        <span class="card-icon">
+                            📊
+                        </span>
+
+                        Live Analysis
+
+                    </div>
+
+                    <p class="live-label">
+                        CALCULATION UPDATES AUTOMATICALLY
+                    </p>
+
+                </div>
+
+                <div class="live-indicator">
+
+                    <span></span>
+
+                    LIVE
+
+                </div>
+
+            </div>
+
+
+
+            <!-- MAIN RESULT -->
+
+            <div class="main-result">
+
+                <span>
+                    GYROSCOPIC COUPLE
+                </span>
+
+                <strong id="couple">
+                    65.80
+                </strong>
+
+                <small>
+                    N·m
+                </small>
+
+            </div>
+
+
+
+            <!-- RESULT GRID -->
+
+            <div class="result-grid">
+
+
+                <div class="result-item">
+
+                    <span>
+                        Moment of Inertia
+                    </span>
+
+                    <strong id="inertia">
+                        0.1000
+                    </strong>
+
+                    <small>
+                        kg·m²
+                    </small>
+
+                </div>
+
+
+                <div class="result-item">
+
+                    <span>
+                        Radius of Gyration
+                    </span>
+
+                    <strong id="gyration">
+                        0.1414
+                    </strong>
+
+                    <small>
+                        m
+                    </small>
+
+                </div>
+
+
+                <div class="result-item">
+
+                    <span>
+                        Angular Velocity
+                    </span>
+
+                    <strong id="omega">
+                        104.72
+                    </strong>
+
+                    <small>
+                        rad/s
+                    </small>
+
+                </div>
+
+
+                <div class="result-item">
+
+                    <span>
+                        Precession Velocity
+                    </span>
+
+                    <strong id="omegaP">
+                        6.28
+                    </strong>
+
+                    <small>
+                        rad/s
+                    </small>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- EQUATION -->
+
+            <div class="result-equation">
+
+                <span>
+                    GOVERNING EQUATION
+                </span>
+
+                <strong>
+                    C = Iωωₚ
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     3D-STYLE VISUALIZATION
+========================================================= -->
+
+<section
+    class="section dark-section"
+    id="visualization">
+
+    <div class="section-heading">
+
+        <span class="small-title">
+            ENGINEERING SIMULATION
+        </span>
+
+        <h2>
+            Rotating Wheel Visualization
+        </h2>
+
+        <p>
+            Interactive representation of spin,
+            precession and gyroscopic action.
+        </p>
+
+    </div>
+
+
+    <div class="simulation-layout">
+
+
+        <!-- SIMULATION -->
+
+        <div class="simulation-card">
+
+            <canvas
+                id="wheelCanvas"
+                width="720"
+                height="500">
+            </canvas>
+
+
+            <div class="simulation-overlay">
+
+                <div class="simulation-value">
+
+                    <span>
+                        SPIN SPEED
+                    </span>
+
+                    <strong id="visualSpeed">
+                        1000 RPM
+                    </strong>
+
+                </div>
+
+
+                <div class="simulation-value">
+
+                    <span>
+                        PRECESSION
+                    </span>
+
+                    <strong id="visualPrecession">
+                        60 RPM
+                    </strong>
+
+                </div>
+
+
+                <div class="simulation-value">
+
+                    <span>
+                        COUPLE
+                    </span>
+
+                    <strong id="visualCouple">
+                        65.80 N·m
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- MOTION INFORMATION -->
+
+        <div class="motion-panel">
+
+
+            <div class="motion-item">
+
+                <div class="motion-icon">
+                    ω
+                </div>
+
+                <div>
+
+                    <strong>
+                        Spin Motion
+                    </strong>
+
+                    <p>
+                        Rotation of the wheel
+                        around its own axis.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="motion-item">
+
+                <div class="motion-icon">
+                    ωₚ
+                </div>
+
+                <div>
+
+                    <strong>
+                        Precession Motion
+                    </strong>
+
+                    <p>
+                        Rotation of the wheel
+                        axis around the precession axis.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="motion-item">
+
+                <div class="motion-icon">
+                    C
+                </div>
+
+                <div>
+
+                    <strong>
+                        Gyroscopic Couple
+                    </strong>
+
+                    <p>
+                        Reaction couple generated
+                        due to the change in angular
+                        momentum direction.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="axis-legend">
+
+                <div>
+                    <span class="legend-dot spin-dot"></span>
+                    Spin Axis
+                </div>
+
+                <div>
+                    <span class="legend-dot precession-dot"></span>
+                    Precession Axis
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     CALCULATION SECTION
+========================================================= -->
+
+<section
+    class="section"
+    id="calculation">
+
+    <div class="section-heading">
+
+        <span class="small-title">
+            MATHEMATICAL MODEL
+        </span>
+
+        <h2>
+            Calculation & Theory
+        </h2>
+
+        <p>
+            Mathematical equations used by the
+            computational model.
+        </p>
+
+    </div>
+
+
+    <!-- TAB BUTTONS -->
+
+    <div class="calculation-tabs">
+
+        <button
+            class="calc-tab active"
+            onclick="openCalcTab('formula')">
+
+            Formula
+
+        </button>
+
+        <button
+            class="calc-tab"
+            onclick="openCalcTab('steps')">
+
+            Step-by-Step
+
+        </button>
+
+        <button
+            class="calc-tab"
+            onclick="openCalcTab('assumptions')">
+
+            Assumptions
+
+        </button>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         FORMULA TAB
+    ====================================================== -->
+
+    <div
+        id="formulaTab"
+        class="calc-tab-content active">
+
+        <div class="formula-grid">
+
+
+            <div class="formula-card">
+
+                <span>
+                    EQUATION 01
+                </span>
+
+                <h3>
+                    Gyroscopic Couple
+                </h3>
+
+                <div class="formula">
+                    C = Iωωₚ
+                </div>
+
+                <p>
+                    The gyroscopic couple is the product
+                    of moment of inertia, spin angular
+                    velocity and precession angular velocity.
+                </p>
+
+            </div>
+
+
+            <div class="formula-card">
+
+                <span>
+                    EQUATION 02
+                </span>
+
+                <h3>
+                    Wheel Angular Velocity
+                </h3>
+
+                <div class="formula">
+                    ω = 2πN / 60
+                </div>
+
+                <p>
+                    Converts wheel speed from RPM
+                    into radians per second.
+                </p>
+
+            </div>
+
+
+            <div class="formula-card">
+
+                <span>
+                    EQUATION 03
+                </span>
+
+                <h3>
+                    Precession Angular Velocity
+                </h3>
+
+                <div class="formula">
+                    ωₚ = 2πNₚ / 60
+                </div>
+
+                <p>
+                    Converts precession speed from
+                    RPM into radians per second.
+                </p>
+
+            </div>
+
+
+            <div class="formula-card">
+
+                <span>
+                    EQUATION 04
+                </span>
+
+                <h3>
+                    Solid Disc
+                </h3>
+
+                <div class="formula">
+                    I = ½mR²
+                </div>
+
+                <p>
+                    Moment of inertia of a solid disc
+                    about its central axis.
+                </p>
+
+            </div>
+
+
+            <div class="formula-card">
+
+                <span>
+                    EQUATION 05
+                </span>
+
+                <h3>
+                    Thin Ring
+                </h3>
+
+                <div class="formula">
+                    I = mR²
+                </div>
+
+                <p>
+                    Moment of inertia of a thin ring
+                    about its central axis.
+                </p>
+
+            </div>
+
+
+            <div class="formula-card highlight-formula">
+
+                <span>
+                    FINAL MODEL
+                </span>
+
+                <h3>
+                    Computational Relation
+                </h3>
+
+                <div class="formula">
+                    C = I × (2πN/60) × (2πNₚ/60)
+                </div>
+
+                <p>
+                    Final computational equation used
+                    by the analyzer.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         STEP TAB
+    ====================================================== -->
+
+    <div
+        id="stepsTab"
+        class="calc-tab-content">
+
+        <div class="calculation-breakdown">
+
+
+            <div class="calculation-step">
+
+                <div class="step-number">
+                    01
+                </div>
+
+                <div class="step-content">
+
+                    <h4>
+                        Moment of Inertia
+                    </h4>
+
+                    <div class="step-formula">
+                        I = ½mR²
+                    </div>
+
+                    <p id="stepInertia">
+                        I = 0.1000 kg·m²
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="calculation-step">
+
+                <div class="step-number">
+                    02
+                </div>
+
+                <div class="step-content">
+
+                    <h4>
+                        Wheel Angular Velocity
+                    </h4>
+
+                    <div class="step-formula">
+                        ω = 2πN / 60
+                    </div>
+
+                    <p id="stepOmega">
+                        ω = 104.72 rad/s
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="calculation-step">
+
+                <div class="step-number">
+                    03
+                </div>
+
+                <div class="step-content">
+
+                    <h4>
+                        Precession Angular Velocity
+                    </h4>
+
+                    <div class="step-formula">
+                        ωₚ = 2πNₚ / 60
+                    </div>
+
+                    <p id="stepOmegaP">
+                        ωₚ = 6.28 rad/s
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="calculation-step final-step">
+
+                <div class="step-number">
+                    04
+                </div>
+
+                <div class="step-content">
+
+                    <h4>
+                        Gyroscopic Couple
+                    </h4>
+
+                    <div class="step-formula">
+                        C = Iωωₚ
+                    </div>
+
+                    <p id="stepCouple">
+                        C = 65.80 N·m
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         ASSUMPTIONS TAB
+    ====================================================== -->
+
+    <div
+        id="assumptionsTab"
+        class="calc-tab-content">
+
+        <div class="assumptions-grid">
+
+
+            <div class="assumption-card">
+
+                <strong>
+                    01
+                </strong>
+
+                <h3>
+                    Rigid Wheel
+                </h3>
+
+                <p>
+                    The rotating wheel is considered
+                    rigid and does not deform during rotation.
+                </p>
+
+            </div>
+
+
+            <div class="assumption-card">
+
+                <strong>
+                    02
+                </strong>
+
+                <h3>
+                    Constant Speed
+                </h3>
+
+                <p>
+                    Wheel speed and precession speed
+                    are assumed to remain constant.
+                </p>
+
+            </div>
+
+
+            <div class="assumption-card">
+
+                <strong>
+                    03
+                </strong>
+
+                <h3>
+                    Negligible Friction
+                </h3>
+
+                <p>
+                    Bearing friction and aerodynamic
+                    resistance are neglected.
+                </p>
+
+            </div>
+
+
+            <div class="assumption-card">
+
+                <strong>
+                    04
+                </strong>
+
+                <h3>
+                    Ideal Geometry
+                </h3>
+
+                <p>
+                    Mass is assumed to be uniformly
+                    distributed according to the selected geometry.
+                </p>
+
+            </div>
+
+
+            <div class="assumption-card">
+
+                <strong>
+                    05
+                </strong>
+
+                <h3>
+                    Small Precession Effects
+                </h3>
+
+                <p>
+                    The model considers the standard
+                    gyroscopic couple relation.
+                </p>
+
+            </div>
+
+
+            <div class="assumption-card">
+
+                <strong>
+                    06
+                </strong>
+
+                <h3>
+                    SI Units
+                </h3>
+
+                <p>
+                    Calculations are performed using
+                    SI units throughout the model.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     ANALYSIS
+========================================================= -->
+
+<section
+    class="section"
+    id="analysis">
+
+    <div class="section-heading">
+
+        <span class="small-title">
+            PARAMETRIC ANALYSIS
+        </span>
+
+        <h2>
+            Performance Analysis
+        </h2>
+
+        <p>
+            Observe how individual parameters affect
+            the calculated gyroscopic couple.
+        </p>
+
+    </div>
+
+
+    <div class="analysis-buttons">
+
+        <button
+            class="analysis-btn active"
+            onclick="showGraph('speed')">
+
+            Wheel Speed
+
+        </button>
+
+        <button
+            class="analysis-btn"
+            onclick="showGraph('precession')">
+
+            Precession Speed
+
+        </button>
+
+        <button
+            class="analysis-btn"
+            onclick="showGraph('mass')">
+
+            Mass
+
+        </button>
+
+        <button
+            class="analysis-btn"
+            onclick="showGraph('radius')">
+
+            Radius
+
+        </button>
+
+    </div>
+
+
+    <div class="chart-card">
+
+        <canvas
+            id="analysisChart">
+        </canvas>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     SENSITIVITY ANALYSIS
+========================================================= -->
+
+<section class="section sensitivity-section">
+
+    <div class="section-heading">
+
+        <span class="small-title">
+            ENGINEERING INSIGHT
+        </span>
+
+        <h2>
+            Sensitivity Analysis
+        </h2>
+
+        <p>
+            Relative influence of major parameters
+            on gyroscopic couple.
+        </p>
+
+    </div>
+
+
+    <div class="sensitivity-grid">
+
+
+        <div class="sensitivity-card">
+
+            <div class="sensitivity-top">
+
+                <strong>
+                    Wheel Speed
+                </strong>
+
+                <span>
+                    C ∝ N
+                </span>
+
+            </div>
+
+            <div class="sensitivity-bar">
+
+                <div
+                    class="sensitivity-fill"
+                    style="width: 65%;">
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="sensitivity-card">
+
+            <div class="sensitivity-top">
+
+                <strong>
+                    Precession Speed
+                </strong>
+
+                <span>
+                    C ∝ Nₚ
+                </span>
+
+            </div>
+
+            <div class="sensitivity-bar">
+
+                <div
+                    class="sensitivity-fill"
+                    style="width: 50%;">
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="sensitivity-card">
+
+            <div class="sensitivity-top">
+
+                <strong>
+                    Mass
+                </strong>
+
+                <span>
+                    C ∝ m
+                </span>
+
+            </div>
+
+            <div class="sensitivity-bar">
+
+                <div
+                    class="sensitivity-fill"
+                    style="width: 55%;">
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="sensitivity-card">
+
+            <div class="sensitivity-top">
+
+                <strong>
+                    Radius
+                </strong>
+
+                <span>
+                    C ∝ R²
+                </span>
+
+            </div>
+
+            <div class="sensitivity-bar">
+
+                <div
+                    class="sensitivity-fill"
+                    style="width: 95%;">
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     VALIDATION
+========================================================= -->
+
+<section
+    class="section validation-section"
+    id="validation">
+
+    <div class="section-heading">
+
+        <span class="small-title">
+            BEYOND-SYLLABUS COMPONENT
+        </span>
+
+        <h2>
+            Computational Validation
+        </h2>
+
+        <p>
+            Compare the computational result with
+            an experimental or reference value.
+        </p>
+
+    </div>
+
+
+    <div class="validation-grid">
+
+
+        <!-- COMPUTATIONAL -->
+
+        <div class="validation-card">
+
+            <div class="validation-card-title">
+                COMPUTATIONAL RESULT
+            </div>
+
+            <div class="validation-result">
+
+                <span>
+                    Calculated Couple
+                </span>
+
+                <strong id="validationCalculated">
+                    65.80
+                </strong>
+
+                <small>
+                    N·m
+                </small>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- EXPERIMENTAL INPUT -->
+
+        <div class="validation-card">
+
+            <div class="validation-card-title">
+                EXPERIMENTAL / REFERENCE VALUE
+            </div>
+
+            <label class="validation-label">
+                Enter measured value
+            </label>
+
+            <div class="validation-input">
+
+                <input
+                    type="number"
+                    id="experimentalCouple"
+                    placeholder="Enter value"
+                    step="0.01"
+                    oninput="calculateValidation()">
+
+                <span>
+                    N·m
+                </span>
+
+            </div>
+
+            <p class="validation-note">
+                Leave blank if experimental validation
+                is not available.
+            </p>
+
+        </div>
+
+
+
+        <!-- ERROR -->
+
+        <div class="validation-card validation-result-card">
+
+            <div class="validation-card-title">
+                VALIDATION STATUS
+            </div>
+
+            <div class="error-result">
+
+                <span>
+                    Percentage Error
+                </span>
+
+                <strong id="percentageError">
+                    —
+                </strong>
+
+                <small>
+                    %
+                </small>
+
+            </div>
+
+            <div
+                class="validation-status"
+                id="validationStatus">
+
+                Waiting for reference value
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     SYMBOLS
+========================================================= -->
+
+<section class="section symbols-section">
+
+    <div class="section-heading">
+
+        <span class="small-title">
+            REFERENCE
+        </span>
+
+        <h2>
+            Symbols & Units
+        </h2>
+
+    </div>
+
+
+    <div class="symbols-card">
+
+        <div class="symbol-row">
+
+            <span>
+                C
+            </span>
+
+            <p>
+                Gyroscopic Couple
+            </p>
+
+            <small>
+                N·m
+            </small>
+
+        </div>
+
+
+        <div class="symbol-row">
+
+            <span>
+                I
+            </span>
+
+            <p>
+                Moment of Inertia
+            </p>
+
+            <small>
+                kg·m²
+            </small>
+
+        </div>
+
+
+        <div class="symbol-row">
+
+            <span>
+                ω
+            </span>
+
+            <p>
+                Wheel Angular Velocity
+            </p>
+
+            <small>
+                rad/s
+            </small>
+
+        </div>
+
+
+        <div class="symbol-row">
+
+            <span>
+                ωₚ
+            </span>
+
+            <p>
+                Precession Angular Velocity
+            </p>
+
+            <small>
+                rad/s
+            </small>
+
+        </div>
+
+
+        <div class="symbol-row">
+
+            <span>
+                m
+            </span>
+
+            <p>
+                Wheel Mass
+            </p>
+
+            <small>
+                kg
+            </small>
+
+        </div>
+
+
+        <div class="symbol-row">
+
+            <span>
+                R
+            </span>
+
+            <p>
+                Wheel Radius
+            </p>
+
+            <small>
+                m
+            </small>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     PROJECT INFORMATION
+========================================================= -->
+
+<section class="project-info">
+
+    <div class="project-info-content">
+
+        <span class="small-title">
+            MICRO PROJECT
+        </span>
+
+        <h2>
+            Determination of Gyroscopic Couple
+        </h2>
+
+        <p>
+            A computational model for determining
+            gyroscopic couple for selected wheel speed,
+            precession speed and mass properties.
+        </p>
+
+        <div class="project-points">
+
+            <span>
+                ✓ Mathematical Model
+            </span>
+
+            <span>
+                ✓ Computational Analysis
+            </span>
+
+            <span>
+                ✓ Interactive Visualization
+            </span>
+
+            <span>
+                ✓ Parametric Study
+            </span>
+
+            <span>
+                ✓ Validation Framework
+            </span>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer>
+
+    <div class="footer-logo">
+        Gyro<span>Lab</span>
+    </div>
+
+    <p>
+        Gyroscopic Couple Computational Analysis
+    </p>
+
+    <small>
+        Mechanical Engineering Micro Project
+    </small>
+
+</footer>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script src="script.js"></script>
+
+
+</body>
+
+</html>
